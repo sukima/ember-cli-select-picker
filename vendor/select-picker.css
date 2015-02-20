@@ -1,0 +1,7 @@
+.select-picker .btn-group .dropdown-menu li.selected a span.check-mark {
+  position:   absolute;
+  display:    inline-block;
+  top:        inherit;
+  right:      10px;
+  margin-top: 5px;
+}

@@ -1,0 +1,38 @@
+{{view "select"
+       class="hidden"
+       content=content
+       selection=selection
+       value=value
+       title=title
+       prompt=prompt
+       multiple=multiple
+       disabled=disabled
+       optionGroupPath=optionGroupPath
+       optionLabelPath=optionLabelPath
+       optionValuePath=optionValuePath}}
+
+<div {{bind-attr class=":btn-group :dropdown disabled:disabled"}}>
+  <button class="btn btn-default dropdown-toggle"
+          type="button"
+          {{bind-attr id=menuButtonId}}
+          {{bind-attr disabled=disabled}}
+          data-toggle="dropdown"
+          aria-expanded="true">
+    <span clas="pull-left">{{selectionSummary}}</span>
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu" {{bind-attr aria-labelledby=menuButtonId}}>
+    {{#each contentList as |item|}}
+      {{#if item.group}}
+        {{#unless item.first}}<li class="divider" role="presentation"></li>{{/unless}}
+        <li class="dropdown-header" role="presentation">{{item.group}}</li>
+      {{/if}}
+      <li role="presentation" {{bind-attr class="item.selected:selected"}}>
+        <a role="menuitem" tabindex="-1" {{action "selectItem" item}}>
+          {{item.label}}
+          <span {{bind-attr class=":glyphicon :glyphicon-ok :check-mark item.selected::hidden"}}></span>
+        </a>
+      </li>
+    {{/each}}
+  </ul>
+</div>
