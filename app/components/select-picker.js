@@ -17,6 +17,17 @@ import Ember from 'ember';
 var SelectPickerComponent = Ember.Component.extend({
   classNames: ['select-picker'],
 
+  dropdownHideGuard: function(e) {
+    if (this.get('keepDropdownOpen')) {
+      e.preventDefault();
+      this.set('keepDropdownOpen', false);
+    }
+  },
+
+  didInsertElement: function() {
+    this.$().on('hide.bs.dropdown', this.dropdownHideGuard.bind(this));
+  },
+
   menuButtonId: function() {
     return this.get('elementId') + '-dropdown-menu';
   }.property('elementId'),
@@ -93,6 +104,7 @@ var SelectPickerComponent = Ember.Component.extend({
 
   actions: {
     selectItem: function(selected) {
+      this.set('keepDropdownOpen', true);
       if (!this.get('disabled')) {
         if (this.get('multiple')) {
           this.toggleSelection(selected.item);
