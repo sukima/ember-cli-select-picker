@@ -1,15 +1,8 @@
 import Ember from 'ember';
 
 // Features:
-//   - single select
-//   - multiple select
-//   - check mark
 //   - select all/none
 //   - filter search (live updating)
-//   - categories (option groups)
-//   - update dropdown summary
-//   - place holder text
-//   - mobile compatible
 //
 // Optional Features:
 //   - keyboard support
