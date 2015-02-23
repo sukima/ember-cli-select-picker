@@ -22,6 +22,9 @@
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu" role="menu" {{bind-attr aria-labelledby=menuButtonId}}>
+    <li>
+      {{input type="text" class="search-filter form-control" value=searchFilter action="preventClosing" on="focus"}}
+    </li>
     {{#each contentList as |item|}}
       {{#if item.group}}
         {{#unless item.first}}<li class="divider" role="presentation"></li>{{/unless}}

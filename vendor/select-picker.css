@@ -5,3 +5,10 @@
   right:      10px;
   margin-top: 5px;
 }
+
+.select-picker .dropdown-menu {
+  padding-right: 5px;
+  padding-left:  5px;
+  overflow-y:    auto;
+  max-height:    400px;
+}

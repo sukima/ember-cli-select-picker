@@ -2,7 +2,6 @@ import Ember from 'ember';
 
 // Features:
 //   - select all/none
-//   - filter search (live updating)
 //
 // Optional Features:
 //   - keyboard support
@@ -56,8 +55,9 @@ var SelectPickerComponent = Ember.Component.extend({
     // value of the multiple property. Ember.Select maintains the value
     // property.
     var selection = this.selectionAsArray();
-    return this.get('content')
-      .map(function(item, index) {
+    var searchFilter = this.getWithDefault('searchFilter', '').toLowerCase();
+    var result = this.get('content')
+      .map(function(item) {
         var label = Ember.get(item, labelPath);
         var value = Ember.get(item, valuePath);
         var group = groupPath ? Ember.get(item, groupPath) : null;
@@ -67,15 +67,31 @@ var SelectPickerComponent = Ember.Component.extend({
           lastGroup = group;
         }
         return {
-          first:    index === 0,
           item:     item,
           group:    group,
           label:    label,
           value:    value,
           selected: selection.contains(item)
         };
+      })
+      .filter(function (item) {
+        var inGroup, inLabel;
+        if (Ember.isEmpty(searchFilter)) {
+          return true; // Show all
+        }
+        if (item.group) {
+          inGroup = item.group.toLowerCase().indexOf(searchFilter) >= 0;
+        }
+        if (item.label) {
+          inLabel = item.label.toLowerCase().indexOf(searchFilter) >= 0;
+        }
+        return (inGroup || inLabel);
       });
-  }.property('selection.@each', 'content.@each', 'optionGroupPath', 'optionLabelPath', 'optionValuePath'),
+    if (result[0]) {
+      result[0].first = true;
+    }
+    return result;
+  }.property('selection.@each', 'content.@each', 'optionGroupPath', 'optionLabelPath', 'optionValuePath', "searchFilter"),
 
   selectionSummary: function() {
     var selection = this.selectionAsArray();
