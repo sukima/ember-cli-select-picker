@@ -11,12 +11,12 @@
        optionLabelPath=optionLabelPath
        optionValuePath=optionValuePath}}
 
-<div {{bind-attr class=":bs-select :btn-group :dropdown :hidden-xs disabled:disabled"}}>
+<div {{bind-attr class=":bs-select :btn-group :dropdown :hidden-xs disabled:disabled showDropdown:open"}}>
   <button class="btn btn-default dropdown-toggle"
           type="button"
           {{bind-attr id=menuButtonId}}
           {{bind-attr disabled=disabled}}
-          data-toggle="dropdown"
+          {{action "showHide"}}
           aria-expanded="true">
     <span clas="pull-left">{{selectionSummary}}</span>
     <span class="caret"></span>

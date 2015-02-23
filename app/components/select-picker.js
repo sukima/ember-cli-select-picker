@@ -3,21 +3,24 @@ import Ember from 'ember';
 // Features:
 //   - select all/none
 //
-// Optional Features:
-//   - keyboard support
+// TODO: features:
+//   - Keyboard support
+//   - Ember.I18n support
 
 var SelectPickerComponent = Ember.Component.extend({
   classNames: ['select-picker'],
-
-  dropdownHideGuard: function(e) {
-    if (this.get('keepDropdownOpen')) {
-      e.preventDefault();
-      this.set('keepDropdownOpen', false);
-    }
-  },
+  showDropdown: false,
 
   didInsertElement: function() {
-    this.$().on('hide.bs.dropdown', this.dropdownHideGuard.bind(this));
+    $(document).on('click', function (e) {
+      if (this.get('keepDropdownOpen')) {
+        this.set('keepDropdownOpen', false);
+        return;
+      }
+      if (!$.contains(this.element, e.target)) {
+        this.set('showDropdown', false);
+      }
+    }.bind(this));
   },
 
   menuButtonId: function() {
@@ -122,6 +125,10 @@ var SelectPickerComponent = Ember.Component.extend({
         }
       }
       return true;
+    },
+
+    showHide: function () {
+      this.toggleProperty('showDropdown');
     }
   }
 
