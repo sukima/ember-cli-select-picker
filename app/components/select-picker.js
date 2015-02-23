@@ -1,8 +1,5 @@
 import Ember from 'ember';
 
-// Features:
-//   - select all/none
-//
 // TODO: features:
 //   - Keyboard support
 //   - Ember.I18n support
@@ -96,6 +93,9 @@ var SelectPickerComponent = Ember.Component.extend({
     return result;
   }.property('selection.@each', 'content.@each', 'optionGroupPath', 'optionLabelPath', 'optionValuePath', "searchFilter"),
 
+  selectedContentList: Ember.computed.filterBy('contentList', 'selected'),
+  unselectedContentList: Ember.computed.setDiff('contentList', 'selectedContentList'),
+
   selectionSummary: function() {
     var selection = this.selectionAsArray();
     switch (selection.length) {
@@ -129,6 +129,13 @@ var SelectPickerComponent = Ember.Component.extend({
 
     showHide: function () {
       this.toggleProperty('showDropdown');
+    },
+
+    selectAllNone: function (listName) {
+      this.get(listName)
+        .forEach(function (item) {
+          this.send('selectItem', item);
+        }.bind(this));
     }
   }
 

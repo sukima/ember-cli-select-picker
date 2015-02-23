@@ -12,3 +12,12 @@
   overflow-y:    auto;
   max-height:    400px;
 }
+
+.select-picker .select-all-none {
+  margin-top: 5px;
+}
+
+.select-picker .select-all-none button {
+  width:      50%;
+  text-align: center;
+}
