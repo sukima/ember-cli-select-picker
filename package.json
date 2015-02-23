@@ -1,7 +1,8 @@
 {
   "name": "ember-cli-select-picker",
-  "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "version": "1.0.0",
+  "description": "A bootstrap 3 compatible select component",
+  "author": "Devin Weaver (@sukima) <suki@tritarget.org>",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -15,7 +16,6 @@
   "engines": {
     "node": ">= 0.10.0"
   },
-  "author": "",
   "license": "MIT",
   "devDependencies": {
     "broccoli-asset-rev": "^2.0.0",
