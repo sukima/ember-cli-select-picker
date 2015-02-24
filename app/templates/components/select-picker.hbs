@@ -28,8 +28,8 @@
     {{#if multiple}}
       <li>
         <div class="btn-group select-all-none btn-block" role="group" aria-label="Select all or none">
-          <button type="button" class="btn btn-default btn-xs" {{action "selectAllNone" "unselectedContentList"}}>All</button>
-          <button type="button" class="btn btn-default btn-xs" {{action "selectAllNone" "selectedContentList"}}>None</button>
+          <button type="button" class="btn btn-default btn-xs" {{action "selectAllNone" "unselectedContentList"}}>{{selectAllLabel}}</button>
+          <button type="button" class="btn btn-default btn-xs" {{action "selectAllNone" "selectedContentList"}}>{{selectNoneLabel}}</button>
         </div>
       </li>
     {{/if}}

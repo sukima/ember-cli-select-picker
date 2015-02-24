@@ -2,11 +2,14 @@ import Ember from 'ember';
 
 // TODO: features:
 //   - Keyboard support
-//   - Ember.I18n support
 
-var SelectPickerComponent = Ember.Component.extend({
-  classNames: ['select-picker'],
-  showDropdown: false,
+var I18n = (Ember.I18n && Ember.I18n.TranslateableProperties) || {};
+
+var SelectPickerComponent = Ember.Component.extend(I18n, {
+  classNames:      ['select-picker'],
+  selectAllLabel:  'All',
+  selectNoneLabel: 'None',
+  showDropdown:    false,
 
   didInsertElement: function() {
     $(document).on('click', function (e) {
