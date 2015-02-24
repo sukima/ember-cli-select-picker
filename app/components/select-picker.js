@@ -9,6 +9,7 @@ var SelectPickerComponent = Ember.Component.extend(I18n, {
   classNames:      ['select-picker'],
   selectAllLabel:  'All',
   selectNoneLabel: 'None',
+  advancedSearch:  false,
   showDropdown:    false,
 
   didInsertElement: function() {
@@ -57,8 +58,9 @@ var SelectPickerComponent = Ember.Component.extend(I18n, {
     // selection is either an object or an array of object depending on the
     // value of the multiple property. Ember.Select maintains the value
     // property.
-    var selection = this.selectionAsArray();
-    var searchFilter = this.getWithDefault('searchFilter', '').toLowerCase();
+    var selection     = this.selectionAsArray();
+    var searchMatcher = this.makeSearchMatcher();
+
     var result = this.get('content')
       .map(function(item) {
         var label = Ember.get(item, labelPath);
@@ -78,26 +80,36 @@ var SelectPickerComponent = Ember.Component.extend(I18n, {
         };
       })
       .filter(function (item) {
-        var inGroup, inLabel;
-        if (Ember.isEmpty(searchFilter)) {
-          return true; // Show all
-        }
-        if (item.group) {
-          inGroup = item.group.toLowerCase().indexOf(searchFilter) >= 0;
-        }
-        if (item.label) {
-          inLabel = item.label.toLowerCase().indexOf(searchFilter) >= 0;
-        }
-        return (inGroup || inLabel);
+        return (searchMatcher(item.group) || searchMatcher(item.label));
       });
+
     if (result[0]) {
       result[0].first = true;
     }
+
     return result;
   }.property('selection.@each', 'content.@each', 'optionGroupPath', 'optionLabelPath', 'optionValuePath', "searchFilter"),
 
   selectedContentList: Ember.computed.filterBy('contentList', 'selected'),
   unselectedContentList: Ember.computed.setDiff('contentList', 'selectedContentList'),
+
+  makeSearchMatcher: function () {
+    var searchFilter = this.get('searchFilter');
+    if (Ember.isEmpty(searchFilter)) {
+      return function () {
+        return true; // Show all
+      };
+    } else if (this.get('advancedSearch')) {
+      searchFilter = new RegExp(searchFilter.split('').join('.*'), 'i');
+      return function (item) {
+        return item && searchFilter.test(item);
+      };
+    } else {
+      return function (item) {
+        return item && item.toLowerCase().indexOf(searchFilter.toLowerCase()) >= 0;
+      };
+    }
+  },
 
   selectionSummary: function() {
     var selection = this.selectionAsArray();
