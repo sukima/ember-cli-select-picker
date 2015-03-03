@@ -12,8 +12,8 @@
        optionValuePath=optionValuePath}}
 
 <div {{bind-attr class=":bs-select :btn-group :dropdown :hidden-xs disabled:disabled showDropdown:open"}}>
-  <button class="btn btn-default dropdown-toggle"
-          type="button"
+  <button type="button"
+          {{bind-attr class=":btn :btn-default :dropdown-toggle class"}}
           {{bind-attr id=menuButtonId}}
           {{bind-attr disabled=disabled}}
           {{action "showHide"}}
