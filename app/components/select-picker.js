@@ -9,7 +9,7 @@ var SelectPickerComponent = Ember.Component.extend(I18n, {
   classNames:      ['select-picker'],
   selectAllLabel:  'All',
   selectNoneLabel: 'None',
-  advancedSearch:  false,
+  liveSearch:      false,
   showDropdown:    false,
 
   didInsertElement: function() {
@@ -99,7 +99,7 @@ var SelectPickerComponent = Ember.Component.extend(I18n, {
       return function () {
         return true; // Show all
       };
-    } else if (this.get('advancedSearch')) {
+    } else if (this.get('liveSearch').toLowerCase() === 'advanced') {
       searchFilter = new RegExp(searchFilter.split('').join('.*'), 'i');
       return function (item) {
         return item && searchFilter.test(item);

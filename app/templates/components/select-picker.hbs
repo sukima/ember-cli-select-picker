@@ -22,9 +22,11 @@
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu" role="menu" {{bind-attr aria-labelledby=menuButtonId}}>
-    <li>
-      {{input type="text" class="search-filter form-control" value=searchFilter action="preventClosing" on="focus"}}
-    </li>
+    {{#if liveSearch}}
+      <li>
+        {{input type="text" class="search-filter form-control" value=searchFilter action="preventClosing" on="focus"}}
+      </li>
+    {{/if}}
     {{#if multiple}}
       <li>
         <div class="btn-group select-all-none btn-block" role="group" aria-label="Select all or none">
