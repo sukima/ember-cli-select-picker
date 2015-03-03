@@ -3,14 +3,16 @@ import Ember from 'ember';
 // TODO: features:
 //   - Keyboard support
 
-var I18n = (Ember.I18n && Ember.I18n.TranslateableProperties) || {};
+var I18nProps = (Ember.I18n && Ember.I18n.TranslateableProperties) || {};
 
-var SelectPickerComponent = Ember.Component.extend(I18n, {
+var SelectPickerComponent = Ember.Component.extend(I18nProps, {
   classNames:      ['select-picker'],
   selectAllLabel:  'All',
   selectNoneLabel: 'None',
   liveSearch:      false,
   showDropdown:    false,
+  prompt:          false,
+  summaryMessage:  '%@ items selected',
 
   didInsertElement: function() {
     $(document).on('click', function (e) {
@@ -114,9 +116,15 @@ var SelectPickerComponent = Ember.Component.extend(I18n, {
   selectionSummary: function() {
     var selection = this.selectionAsArray();
     switch (selection.length) {
-      case 0:  return this.get('prompt') || '';
-      case 1:  return this.getByContentPath(selection[0], 'optionValuePath');
-      default: return selection.length + ' items selected';
+      // I18n done by promptTranslate property (I18n plugin)
+      case 0:  return this.get('prompt') || 'Nothing Selected';
+      case 1:  return this.getByContentPath(selection[0], 'optionLabelPath');
+      default:
+        if (Ember.I18n) {
+          return Ember.I18n.t(this.get('summaryMessage'), {count: selection.length});
+        } else {
+          return this.get('summaryMessage').fmt(selection.length);
+        }
     }
   }.property('selection.@each'),
 
