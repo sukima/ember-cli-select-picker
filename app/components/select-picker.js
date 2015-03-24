@@ -6,6 +6,9 @@ var I18nProps = (Ember.I18n && Ember.I18n.TranslateableProperties) || {};
 var SelectPickerComponent = Ember.Component.extend(
   SelectPickerMixin, I18nProps, {
 
+  selectAllLabel:  'All',
+  selectNoneLabel: 'None',
+
   classNames: ['select-picker'],
 
   groupedContentList: function() {

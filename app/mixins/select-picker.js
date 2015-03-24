@@ -4,8 +4,6 @@ import Ember from 'ember';
 //   - Keyboard support
 
 var SelectPickerMixin = Ember.Mixin.create({
-  selectAllLabel:  'All',
-  selectNoneLabel: 'None',
   liveSearch:      false,
   showDropdown:    false,
   prompt:          false,

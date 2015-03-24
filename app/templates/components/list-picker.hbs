@@ -1,0 +1,39 @@
+{{view "select"
+       class="native-select hidden"
+       content=content
+       selection=selection
+       value=value
+       title=title
+       prompt=prompt
+       multiple=multiple
+       disabled=disabled
+       optionGroupPath=optionGroupPath
+       optionLabelPath=optionLabelPath
+       optionValuePath=optionValuePath}}
+
+<div {{bind-attr class=":bs-select disabled:disabled"}}>
+  {{#if liveSearch}}
+    {{input type="text" class="search-filter form-control" value=searchFilter action="preventClosing" on="focus"}}
+  {{/if}}
+  {{#if multiple}}
+    <div class="btn-group select-all-none btn-block" role="group" aria-label="Select all or none">
+      <button type="button" class="btn btn-default" {{action "selectAllNone" "unselectedContentList"}}>{{selectAllLabel}}</button>
+      <button type="button" class="btn btn-default" {{action "selectAllNone" "selectedContentList"}}>{{selectNoneLabel}}</button>
+    </div>
+  {{/if}}
+  {{#each groupedContentList as |group|}}
+    {{#if group.header}}
+      <h4 role="presentation">{{group.header}}</h4>
+    {{/if}}
+    <div role="group" class="btn-group-vertical btn-block">
+      {{#each group.items as |item|}}
+        <button role="presentation"
+                {{action "selectItem" item}}
+                {{bind-attr class=":btn :btn-default item.selected:active"}}>
+          {{item.label}}
+          <span {{bind-attr class=":pull-right :glyphicon :glyphicon-ok :check-mark item.selected::invisible"}}></span>
+        </button>
+      {{/each}}
+    </div>
+  {{/each}}
+</div>
