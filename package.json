@@ -3,6 +3,7 @@
   "version": "1.1.2",
   "description": "A bootstrap 3 compatible select component",
   "author": "Devin Weaver (@sukima) <suki@tritarget.org>",
+  "homepage": "https://sukima.github.io/ember-cli-select-picker/",
   "directories": {
     "doc": "doc",
     "test": "tests"
