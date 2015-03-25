@@ -162,9 +162,9 @@ var SelectPickerMixin = Ember.Mixin.create({
 
   actions: {
     selectItem: function(selected) {
-      this.set('keepDropdownOpen', true);
       if (!this.get('disabled')) {
         if (this.get('multiple')) {
+          this.set('keepDropdownOpen', true);
           this.toggleSelection(selected.item);
         } else {
           this.set('selection', selected.item);
