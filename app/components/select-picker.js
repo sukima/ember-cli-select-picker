@@ -11,6 +11,23 @@ var SelectPickerComponent = Ember.Component.extend(
 
   classNames: ['select-picker'],
 
+  didInsertElement: function() {
+    var eventName = 'click.' + this.get('elementId');
+    $(document).on(eventName, function (e) {
+      if (this.get('keepDropdownOpen')) {
+        this.set('keepDropdownOpen', false);
+        return;
+      }
+      if (this.element && !$.contains(this.element, e.target)) {
+        this.set('showDropdown', false);
+      }
+    }.bind(this));
+  },
+
+  willDestroyElement: function() {
+    $(document).off('.' + this.get('elementId'));
+  },
+
   groupedContentList: function() {
     var lastGroup;
     return this.get('contentList').map(function(item) {

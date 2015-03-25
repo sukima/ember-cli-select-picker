@@ -43,23 +43,6 @@ var SelectPickerMixin = Ember.Mixin.create({
   prompt:          false,
   summaryMessage:  '%@ items selected',
 
-  didInsertElement: function() {
-    var eventName = 'click.' + this.get('elementId');
-    $(document).on(eventName, function (e) {
-      if (this.get('keepDropdownOpen')) {
-        this.set('keepDropdownOpen', false);
-        return;
-      }
-      if (this.element && !$.contains(this.element, e.target)) {
-        this.set('showDropdown', false);
-      }
-    }.bind(this));
-  },
-
-  willDestroyElement: function() {
-    $(document).off('.' + this.get('elementId'));
-  },
-
   menuButtonId: function() {
     return this.get('elementId') + '-dropdown-menu';
   }.property('elementId'),
