@@ -16,10 +16,17 @@
     {{input type="text" class="search-filter form-control" value=searchFilter action="preventClosing" on="focus"}}
   {{/if}}
   {{#if multiple}}
-    <div class="btn-group select-all-none btn-block" role="group" aria-label="Select all or none">
-      <button type="button" class="btn btn-default" {{action "selectAllNone" "unselectedContentList"}}>{{selectAllLabel}}</button>
-      <button type="button" class="btn btn-default" {{action "selectAllNone" "selectedContentList"}}>{{selectNoneLabel}}</button>
-    </div>
+    {{#if splitAllNoneButtons}}
+      <div class="btn-group select-all-none" role="group" aria-label="Select all or none">
+        <button type="button" class="btn btn-default" {{action "selectAllNone" "unselectedContentList"}}>{{selectAllLabel}}</button>
+        <button type="button" class="btn btn-default" {{action "selectAllNone" "selectedContentList"}}>{{selectNoneLabel}}</button>
+      </div>
+    {{else}}
+      <button type="button" class="btn btn-default btn-block" {{action "toggleSelectAllNone"}}>
+        {{selectAllNoneLabel}}
+        <span {{bind-attr class=":pull-right :glyphicon glyphiconClass"}}></span>
+      </button>
+    {{/if}}
   {{/if}}
   {{#each groupedContentList as |group|}}
     {{#if group.header}}

@@ -3,6 +3,40 @@ import Ember from 'ember';
 // TODO: features:
 //   - Keyboard support
 
+var selectOneOf = function(someSelected,
+                           allSelected,
+                           noneSelected) {
+  return function() {
+    if (this.get('allItemsSelected')) {
+      return allSelected.call(this);
+    } else if (this.get('hasSelectedItems')) {
+      return someSelected.call(this);
+    } else {
+      return noneSelected.call(this);
+    }
+  }.property('hasSelectedItems', 'allItemsSelected');
+};
+
+var selectOneOfValue = function(someSelectedValue,
+                                allSelectedValue,
+                                noneSelectedValue) {
+  return selectOneOf(
+    function() { return someSelectedValue; },
+    function() { return allSelectedValue; },
+    function() { return noneSelectedValue; }
+  );
+};
+
+var selectOneOfProperty = function(someSelectedKey,
+                                   allSelectedKey,
+                                   noneSelectedKey) {
+  return selectOneOf(
+    function() { return this.get(someSelectedKey); },
+    function() { return this.get(allSelectedKey); },
+    function() { return this.get(noneSelectedKey); }
+  );
+};
+
 var SelectPickerMixin = Ember.Mixin.create({
   liveSearch:      false,
   showDropdown:    false,
@@ -89,8 +123,13 @@ var SelectPickerMixin = Ember.Mixin.create({
     return Ember.get(obj, this.contentPathName(pathName));
   },
 
-  selectedContentList: Ember.computed.filterBy('contentList', 'selected'),
+  selectedContentList:   Ember.computed.filterBy('contentList', 'selected'),
   unselectedContentList: Ember.computed.setDiff('contentList', 'selectedContentList'),
+  hasSelectedItems:      Ember.computed.gt('selectedContentList.length', 0),
+  allItemsSelected:      Ember.computed.empty('unselectedContentList'),
+
+  glyphiconClass:     selectOneOfValue('glyphicon-minus', 'glyphicon-ok', ''),
+  selectAllNoneLabel: selectOneOfProperty('selectNoneLabel', 'selectNoneLabel', 'selectAllLabel'),
 
   makeSearchMatcher: function () {
     var searchFilter = this.get('searchFilter');
@@ -152,6 +191,16 @@ var SelectPickerMixin = Ember.Mixin.create({
         .forEach(function (item) {
           this.send('selectItem', item);
         }.bind(this));
+    },
+
+    toggleSelectAllNone: function () {
+      var listName;
+      if (this.get('hasSelectedItems')) {
+        listName = 'selectedContentList';
+      } else {
+        listName = 'unselectedContentList';
+      }
+      this.send('selectAllNone', listName);
     }
   }
 });
