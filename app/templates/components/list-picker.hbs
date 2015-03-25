@@ -13,7 +13,17 @@
 
 <div {{bind-attr class=":bs-select disabled:disabled"}}>
   {{#if liveSearch}}
-    {{input type="text" class="search-filter form-control" value=searchFilter action="preventClosing" on="focus"}}
+    <div class="input-group">
+      {{input type="text" class="search-filter form-control" value=searchFilter action="preventClosing" on="focus"}}
+      <span class="input-group-btn">
+        <button type="button"
+                class="btn btn-default"
+                {{bind-attr disabled=clearSearchDisabled}}
+                {{action "clearFilter"}}>
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+      </span>
+    </div>
   {{/if}}
   {{#if multiple}}
     {{#if splitAllNoneButtons}}

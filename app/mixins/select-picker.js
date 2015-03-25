@@ -166,6 +166,8 @@ var SelectPickerMixin = Ember.Mixin.create({
     }
   }.property('selection.@each'),
 
+  clearSearchDisabled: Ember.computed.empty('searchFilter'),
+
   toggleSelection: function(value) {
     var selection = this.get('selection');
     if (selection.contains(value)) {
@@ -203,6 +205,10 @@ var SelectPickerMixin = Ember.Mixin.create({
         listName = 'unselectedContentList';
       }
       this.send('selectAllNone', listName);
+    },
+
+    clearFilter: function() {
+      this.set('searchFilter', null);
     }
   }
 });
