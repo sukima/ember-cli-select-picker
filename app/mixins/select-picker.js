@@ -125,8 +125,10 @@ var SelectPickerMixin = Ember.Mixin.create({
 
   selectedContentList:   Ember.computed.filterBy('contentList', 'selected'),
   unselectedContentList: Ember.computed.setDiff('contentList', 'selectedContentList'),
-  hasSelectedItems:      Ember.computed.gt('selectedContentList.length', 0),
-  allItemsSelected:      Ember.computed.empty('unselectedContentList'),
+  hasSelectedItems:      Ember.computed.gt('selection.length', 0),
+  allItemsSelected: function() {
+    return Ember.isEqual(this.get('selection.length'), this.get('content.length'));
+  }.property('selection.length', 'content.length'),
 
   glyphiconClass:     selectOneOfValue('glyphicon-minus', 'glyphicon-ok', ''),
   selectAllNoneLabel: selectOneOfProperty('selectNoneLabel', 'selectNoneLabel', 'selectAllLabel'),
