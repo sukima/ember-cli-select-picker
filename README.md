@@ -21,7 +21,8 @@ In your templates simply replace the usual `{{view "select"}}` with `{{select-pi
 More options and examples are available on the [demo][] site.
 
 ```handlebars
-{{select-picker content=mySelectContents
+{{select-picker value=myModel.myAttr
+                content=mySelectContents
                 optionGroupPath="group"
                 optionLabelPath="content.label"
                 optionValuePath="content.value"}}
