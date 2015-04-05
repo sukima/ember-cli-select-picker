@@ -1,4 +1,4 @@
-# LevelUP is an OPEN Open Source Project
+# ember-cli-select-picker is an OPEN Open Source Project
 
 ## What?
 
