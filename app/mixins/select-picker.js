@@ -174,10 +174,11 @@ var SelectPickerMixin = Ember.Mixin.create({
     },
 
     selectAllNone: function (listName) {
+      var _this = this;
       this.get(listName)
         .forEach(function (item) {
-          this.send('selectItem', item);
-        }.bind(this));
+          _this.send('selectItem', item);
+        });
     },
 
     toggleSelectAllNone: function () {
