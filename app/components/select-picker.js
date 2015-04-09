@@ -13,15 +13,16 @@ var SelectPickerComponent = Ember.Component.extend(
 
   didInsertElement: function() {
     var eventName = 'click.' + this.get('elementId');
+    var _this = this;
     $(document).on(eventName, function (e) {
-      if (this.get('keepDropdownOpen')) {
-        this.set('keepDropdownOpen', false);
+      if (_this.get('keepDropdownOpen')) {
+        _this.set('keepDropdownOpen', false);
         return;
       }
-      if (this.element && !$.contains(this.element, e.target)) {
-        this.set('showDropdown', false);
+      if (_this.element && !$.contains(_this.element, e.target)) {
+        _this.set('showDropdown', false);
       }
-    }.bind(this));
+    });
   },
 
   willDestroyElement: function() {
