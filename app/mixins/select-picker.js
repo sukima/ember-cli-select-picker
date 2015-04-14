@@ -38,10 +38,12 @@ var selectOneOfProperty = function(someSelectedKey,
 };
 
 var SelectPickerMixin = Ember.Mixin.create({
-  liveSearch:      false,
-  showDropdown:    false,
-  prompt:          false,
-  summaryMessage:  '%@ items selected',
+  liveSearch:     false,
+  showDropdown:   false,
+  prompt:         false,
+  content:        [],
+  selection:      [],
+  summaryMessage: '%@ items selected',
 
   menuButtonId: function() {
     return this.get('elementId') + '-dropdown-menu';
