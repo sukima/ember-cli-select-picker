@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import SelectPickerMixin from '../mixins/select-picker';
+import SelectPickerMixin from 'ember-cli-select-picker/mixins/select-picker';
 
 var I18nProps = (Ember.I18n && Ember.I18n.TranslateableProperties) || {};
 
