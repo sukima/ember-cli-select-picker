@@ -3,8 +3,10 @@
 
 module.exports = {
   name: 'ember-cli-select-picker',
-  included: function(app) {
-    this._super.included(app);
-    app.import('vendor/select-picker.css');
+
+  included: function(app, parentAddon) {
+    var target = (parentAddon || app);
+
+    target.import('vendor/select-picker.css');
   }
 };
