@@ -6,15 +6,18 @@ import Ember from 'ember';
 var selectOneOf = function(someSelected,
                            allSelected,
                            noneSelected) {
-  return function() {
-    if (this.get('allItemsSelected')) {
-      return allSelected.call(this);
-    } else if (this.get('hasSelectedItems')) {
-      return someSelected.call(this);
-    } else {
-      return noneSelected.call(this);
+  return Ember.computed(
+    'hasSelectedItems', 'allItemsSelected',
+    function() {
+      if (this.get('allItemsSelected')) {
+        return allSelected.call(this);
+      } else if (this.get('hasSelectedItems')) {
+        return someSelected.call(this);
+      } else {
+        return noneSelected.call(this);
+      }
     }
-  }.property('hasSelectedItems', 'allItemsSelected');
+  );
 };
 
 var selectOneOfValue = function(someSelectedValue,
@@ -45,9 +48,12 @@ var SelectPickerMixin = Ember.Mixin.create({
   selection:      [],
   summaryMessage: '%@ items selected',
 
-  menuButtonId: function() {
-    return this.get('elementId') + '-dropdown-menu';
-  }.property('elementId'),
+  menuButtonId: Ember.computed(
+    'elementId',
+    function() {
+      return this.get('elementId') + '-dropdown-menu';
+    }
+  ),
 
   selectionAsArray: function() {
     var selection = this.get('selection');
@@ -60,45 +66,53 @@ var SelectPickerMixin = Ember.Mixin.create({
     }
   },
 
-  contentList: function() {
-    // Ember.Select does not include the content prefix for optionGroupPath
-    var groupPath = this.get('optionGroupPath');
-    // Ember.Select expects optionLabelPath and optionValuePath to have a
-    // `content.` prefix
-    var labelPath = this.contentPathName('optionLabelPath');
-    var valuePath = this.contentPathName('optionValuePath');
-    // selection is either an object or an array of object depending on the
-    // value of the multiple property. Ember.Select maintains the value
-    // property.
-    var selection     = this.selectionAsArray();
-    var searchMatcher = this.makeSearchMatcher();
+  contentList: Ember.computed(
+    'selection.@each', 'content.@each', 'optionGroupPath', 'optionLabelPath',
+    'optionValuePath', 'searchFilter',
+    function() {
+      // Ember.Select does not include the content prefix for optionGroupPath
+      var groupPath = this.get('optionGroupPath');
+      // Ember.Select expects optionLabelPath and optionValuePath to have a
+      // `content.` prefix
+      var labelPath = this.contentPathName('optionLabelPath');
+      var valuePath = this.contentPathName('optionValuePath');
+      // selection is either an object or an array of object depending on the
+      // value of the multiple property. Ember.Select maintains the value
+      // property.
+      var selection     = this.selectionAsArray();
+      var searchMatcher = this.makeSearchMatcher();
 
-    var result = this.get('content')
-      .map(function(item) {
-        var label = Ember.get(item, labelPath);
-        var value = Ember.get(item, valuePath);
-        var group = groupPath ? Ember.get(item, groupPath) : null;
-        if (searchMatcher(group) || searchMatcher(label)) {
-          return {
-            item:     item,
-            group:    group,
-            label:    label,
-            value:    value,
-            selected: selection.contains(item)
-          };
-        } else {
-          return null;
-        }
-      })
-      .compact();
+      var result = Ember.A(this.get('content'))
+        .map(function(item) {
+          var label = Ember.get(item, labelPath);
+          var value = Ember.get(item, valuePath);
+          var group = groupPath ? Ember.get(item, groupPath) : null;
+          if (searchMatcher(group) || searchMatcher(label)) {
+            return {
+              item:     item,
+              group:    group,
+              label:    label,
+              value:    value,
+              selected: selection.contains(item)
+            };
+          } else {
+            return null;
+          }
+        });
 
-    if (result[0]) {
-      result[0].first = true;
+      // Ember Addons need to be coded as if Ember.EXTEND_PROTOTYPES = false
+      // Because of this we need to manually extend our native array from the
+      // above map() function. compact() is an Ember function and so returns
+      // an Ember.Array which is what we want anyway.
+      result = Ember.A(result).compact();
+
+      if (result[0]) {
+        result[0].first = true;
+      }
+
+      return result;
     }
-
-    return result;
-  }.property('selection.@each', 'content.@each', 'optionGroupPath',
-             'optionLabelPath', 'optionValuePath', 'searchFilter'),
+  ),
 
   contentPathName: function(pathName) {
     return this.getWithDefault(pathName, '').substr(8);
@@ -111,9 +125,12 @@ var SelectPickerMixin = Ember.Mixin.create({
   selectedContentList:   Ember.computed.filterBy('contentList', 'selected'),
   unselectedContentList: Ember.computed.setDiff('contentList', 'selectedContentList'),
   hasSelectedItems:      Ember.computed.gt('selection.length', 0),
-  allItemsSelected: function() {
-    return Ember.isEqual(this.get('selection.length'), this.get('content.length'));
-  }.property('selection.length', 'content.length'),
+  allItemsSelected: Ember.computed(
+    'selection.length', 'content.length',
+    function() {
+      return Ember.isEqual(this.get('selection.length'), this.get('content.length'));
+    }
+  ),
 
   glyphiconClass:     selectOneOfValue('glyphicon-minus', 'glyphicon-ok', ''),
   selectAllNoneLabel: selectOneOfProperty('selectNoneLabel', 'selectNoneLabel', 'selectAllLabel'),
@@ -136,20 +153,23 @@ var SelectPickerMixin = Ember.Mixin.create({
     }
   },
 
-  selectionSummary: function() {
-    var selection = this.selectionAsArray();
-    switch (selection.length) {
-      // I18n done by promptTranslate property (I18n plugin)
-      case 0:  return this.get('prompt') || 'Nothing Selected';
-      case 1:  return this.getByContentPath(selection[0], 'optionLabelPath');
-      default:
-        if (Ember.I18n) {
-          return Ember.I18n.t(this.get('summaryMessage'), {count: selection.length});
-        } else {
-          return this.get('summaryMessage').fmt(selection.length);
-        }
+  selectionSummary: Ember.computed(
+    'selection.@each',
+    function() {
+      var selection = this.selectionAsArray();
+      switch (selection.length) {
+        // I18n done by promptTranslate property (I18n plugin)
+        case 0:  return this.get('prompt') || 'Nothing Selected';
+        case 1:  return this.getByContentPath(selection[0], 'optionLabelPath');
+        default:
+          if (Ember.I18n) {
+            return Ember.I18n.t(this.get('summaryMessage'), {count: selection.length});
+          } else {
+            return this.get('summaryMessage').fmt(selection.length);
+          }
+      }
     }
-  }.property('selection.@each'),
+  ),
 
   clearSearchDisabled: Ember.computed.empty('searchFilter'),
 

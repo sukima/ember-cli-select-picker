@@ -3,6 +3,7 @@
 # compiled output
 /dist
 /tmp
+bower.json.ember-try
 
 # dependencies
 /node_modules

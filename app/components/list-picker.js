@@ -11,25 +11,28 @@ var ListPickerComponent = Ember.Component.extend(
 
   classNames: ['select-picker', 'list-picker'],
 
-  groupedContentList: function() {
-    var groups = [];
-    var content  = [];
-    this.get('contentList').forEach(function(item) {
-      var header;
-      var groupIndex = groups.indexOf(item.group);
-      if (groupIndex < 0) {
-        header = item.group;
-        groups.push(header);
-        content.push({
-          header: header,
-          items: [item]
-        });
-      } else {
-        content[groupIndex].items.push(item);
-      }
-    });
-    return content;
-  }.property('contentList.@each')
+  groupedContentList: Ember.computed(
+    'contentList.@each',
+    function() {
+      var groups = Ember.A();
+      var content = Ember.A();
+      Ember.A(this.get('contentList')).forEach(function(item) {
+        var header;
+        var groupIndex = groups.indexOf(item.group);
+        if (groupIndex < 0) {
+          header = item.group;
+          groups.push(header);
+          content.push({
+            header: header,
+            items: Ember.A([item])
+          });
+        } else {
+          content[groupIndex].items.push(item);
+        }
+      });
+      return content;
+    }
+  )
 });
 
 export default ListPickerComponent;
