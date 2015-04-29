@@ -18,7 +18,7 @@
       {{input type="text" class="search-filter form-control" value=searchFilter action="preventClosing" on="focus"}}
       <span class="input-group-btn">
         <button type="button"
-                class="btn btn-default list-picker-clear-filter"
+                class="btn btn-default"
                 {{bind-attr disabled=clearSearchDisabled}}
                 {{action "clearFilter"}}>
           <span class="glyphicon glyphicon-remove"></span>
@@ -43,7 +43,7 @@
     {{#if group.header}}
       <h4 role="presentation">{{group.header}}</h4>
     {{/if}}
-    <div role="group" class="btn-group-vertical btn-block list-picker-items-container">
+    <div role="group" class="btn-group-vertical btn-block">
       {{#each group.items as |item|}}
         <button role="presentation"
                 {{action "selectItem" item}}
