@@ -1,4 +1,4 @@
-# Ember-cli-select-picker
+# Ember-cli-select-picker [![Build Status](https://travis-ci.org/sukima/ember-cli-select-picker.svg?branch=master)](https://travis-ci.org/sukima/ember-cli-select-picker)
 
 <img align="right" src="https://sukima.github.io/ember-cli-select-picker/dist/screen-shot.png" />
 
