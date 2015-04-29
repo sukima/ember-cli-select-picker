@@ -1,4 +1,4 @@
-# Ember-cli-select-picker
+# Ember-cli-select-picker [![npm version](http://img.shields.io/npm/v/ember-cli-select-picker.svg)](https://npmjs.org/package/ember-cli-select-picker) [![build status](http://img.shields.io/travis/sukima/ember-cli-select-picker.svg)](https://travis-ci.org/sukima/ember-cli-select-picker)
 
 <img align="right" src="https://sukima.github.io/ember-cli-select-picker/dist/screen-shot.png" />
 
