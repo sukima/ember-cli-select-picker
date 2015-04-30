@@ -65,9 +65,9 @@ var SelectPickerMixin = Ember.Mixin.create({
   selectionAsArray: function() {
     var selection = this.get('selection');
     if (Ember.isNone(selection)) {
-      return [];
+      return Ember.A();
     } else if (!Ember.isArray(selection)) {
-      return [selection];
+      return Ember.A([selection]);
     }
     return Ember.A(selection);
   },
