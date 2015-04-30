@@ -40,6 +40,13 @@ var selectOneOfProperty = function(someSelectedKey,
   );
 };
 
+var isAdvancedSearch = function(liveSearch) {
+  return (
+    Ember.typeOf(liveSearch) === 'string' &&
+    liveSearch.toLowerCase() === 'advanced'
+  );
+};
+
 var SelectPickerMixin = Ember.Mixin.create({
   liveSearch:     false,
   showDropdown:   false,
@@ -57,13 +64,12 @@ var SelectPickerMixin = Ember.Mixin.create({
 
   selectionAsArray: function() {
     var selection = this.get('selection');
-    if (Ember.isArray(selection)) {
-      return selection;
-    } else if (Ember.isNone(selection)) {
+    if (Ember.isNone(selection)) {
       return [];
-    } else {
+    } else if (!Ember.isArray(selection)) {
       return [selection];
     }
+    return Ember.A(selection);
   },
 
   contentList: Ember.computed(
@@ -110,7 +116,7 @@ var SelectPickerMixin = Ember.Mixin.create({
         result[0].first = true;
       }
 
-      return result;
+      return Ember.A(result);
     }
   ),
 
@@ -141,14 +147,15 @@ var SelectPickerMixin = Ember.Mixin.create({
       return function () {
         return true; // Show all
       };
-    } else if (this.get('liveSearch').toLowerCase() === 'advanced') {
+    } else if (isAdvancedSearch(this.get('liveSearch'))) {
       searchFilter = new RegExp(searchFilter.split('').join('.*'), 'i');
       return function (item) {
         return item && searchFilter.test(item);
       };
     } else {
+      searchFilter = searchFilter.toLowerCase();
       return function (item) {
-        return item && item.toLowerCase().indexOf(searchFilter.toLowerCase()) >= 0;
+        return item && item.toLowerCase().indexOf(searchFilter) >= 0;
       };
     }
   },
@@ -157,16 +164,17 @@ var SelectPickerMixin = Ember.Mixin.create({
     'selection.@each',
     function() {
       var selection = this.selectionAsArray();
+      if (Ember.I18n) {
+        return Ember.I18n.t(this.get('summaryMessage'), {count: selection.length});
+      }
       switch (selection.length) {
         // I18n done by promptTranslate property (I18n plugin)
-        case 0:  return this.get('prompt') || 'Nothing Selected';
-        case 1:  return this.getByContentPath(selection[0], 'optionLabelPath');
+        case 0:
+          return this.get('prompt') || 'Nothing Selected';
+        case 1:
+          return this.getByContentPath(selection[0], 'optionLabelPath');
         default:
-          if (Ember.I18n) {
-            return Ember.I18n.t(this.get('summaryMessage'), {count: selection.length});
-          } else {
-            return this.get('summaryMessage').fmt(selection.length);
-          }
+          return Ember.String.fmt(this.get('summaryMessage'), selection.length);
       }
     }
   ),
