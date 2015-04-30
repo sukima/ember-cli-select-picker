@@ -11,8 +11,7 @@ See the [demo][] for examples, usage, and code snippits.
 
 ## Installation
 
-* `npm install --save-dev ember-cli-select-picker`
-* `bower install --save bootstrap`
+* `ember install ember-cli-select-picker`
 
 ## Using
 
@@ -30,6 +29,7 @@ More options and examples are available on the [demo][] site.
 
 ## Running Tests
 
+* `npm test` - Test with Ember release, beta, and canary
 * `ember test`
 * `ember test --server`
 
