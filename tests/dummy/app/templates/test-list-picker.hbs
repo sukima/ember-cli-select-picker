@@ -1,0 +1,14 @@
+<div id="single-picker">
+  {{list-picker content=theContent
+                selection=singleValue
+                optionLabelPath="content.name"
+                optionValuePath="content.id"}}
+</div>
+
+<div id="multiple-picker">
+  {{list-picker content=theContent
+                selection=multipleValue
+                multiple="true"
+                optionLabelPath="content.name"
+                optionValuePath="content.id"}}
+</div>
