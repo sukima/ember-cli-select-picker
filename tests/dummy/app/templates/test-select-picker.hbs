@@ -1,0 +1,30 @@
+<div id="single-picker">
+  {{select-picker content=theContent
+                  selection=singleValue
+                  optionLabelPath="content.name"
+                  optionValuePath="content.id"}}
+</div>
+
+<div id="multiple-picker">
+  {{select-picker content=theContent
+                  selection=multipleValue
+                  multiple="true"
+                  optionLabelPath="content.name"
+                  optionValuePath="content.id"}}
+</div>
+
+<div id="normal-search-picker">
+  {{!select-picker content=theContent
+                  selection=multipleValue
+                  liveSearch="true"
+                  optionLabelPath="content.name"
+                  optionValuePath="content.id"}}
+</div>
+
+<div id="advanced-search-picker">
+  {{!select-picker content=theContent
+                  selection=multipleValue
+                  liveSearch="advanced"
+                  optionLabelPath="content.name"
+                  optionValuePath="content.id"}}
+</div>
