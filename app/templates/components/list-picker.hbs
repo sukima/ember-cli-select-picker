@@ -1,6 +1,6 @@
 {{view "select"
        class="native-select"
-       classNameBindings="mobile:visible-xs-inline:hidden"
+       classNameBindings="nativeMobile:visible-xs-inline:hidden"
        content=content
        selection=selection
        value=value
@@ -12,7 +12,7 @@
        optionLabelPath=optionLabelPath
        optionValuePath=optionValuePath}}
 
-<div {{bind-attr class=":bs-select mobile:hidden-xs disabled:disabled"}}>
+<div {{bind-attr class=":bs-select nativeMobile:hidden-xs disabled:disabled"}}>
   {{#if liveSearch}}
     <div class="input-group">
       {{input type="text" class="search-filter form-control" value=searchFilter action="preventClosing" on="focus"}}

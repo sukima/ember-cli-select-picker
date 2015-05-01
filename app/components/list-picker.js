@@ -9,6 +9,8 @@ var ListPickerComponent = Ember.Component.extend(
   selectAllLabel:  'Select All',
   selectNoneLabel: 'Select None',
 
+  nativeMobile: false,
+
   classNames: ['select-picker', 'list-picker'],
 
   groupedContentList: Ember.computed(

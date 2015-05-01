@@ -9,6 +9,8 @@ var SelectPickerComponent = Ember.Component.extend(
   selectAllLabel:  'All',
   selectNoneLabel: 'None',
 
+  nativeMobile: true,
+
   classNames: ['select-picker'],
 
   didInsertElement: function() {
