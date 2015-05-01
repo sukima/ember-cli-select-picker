@@ -1,0 +1,16 @@
+<h1>keyboard-select-picker</h1>
+
+<div id="single-picker">
+  {{keyboard-select-picker content=theContent
+                           selection=singleValue
+                           optionLabelPath="content.name"
+                           optionValuePath="content.id"}}
+</div>
+
+<div id="multiple-picker">
+  {{keyboard-select-picker content=theContent
+                           selection=multipleValue
+                           multiple="true"
+                           optionLabelPath="content.name"
+                           optionValuePath="content.id"}}
+</div>

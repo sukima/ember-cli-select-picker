@@ -8,6 +8,7 @@ var Router = Ember.Router.extend({
 Router.map(function() {
   this.route('test-select-picker');
   this.route('test-list-picker');
+  this.route('test-keyboard-picker');
 });
 
 export default Router;
