@@ -176,23 +176,43 @@ var SelectPickerMixin = Ember.Mixin.create({
     }
   },
 
-  selectionSummary: Ember.computed(
-    'selection.@each', 'prompt', 'summaryMessage',
+  selectionLabels: Ember.computed(
+    'selection.@each',
     function() {
-      var selection = this.selectionAsArray();
+      var result = this.selectionAsArray()
+        .map(Ember.run.bind(this, function(item) {
+          return this.getByContentPath(item, 'optionLabelPath');
+        }));
+      return Ember.A(result);
+    }
+  ),
+
+  selectionSummary: Ember.computed(
+    'selectionLabels.@each', 'prompt', 'summaryMessage',
+    function() {
+      var selection = this.get('selectionLabels');
       var messageKey = this.get('summaryMessageTranslation');
       if (Ember.I18n && Ember.isPresent(messageKey)) {
         // I18n for prompt can be managed by using the pluralization feature:
         // https://github.com/jamesarosen/ember-i18n#pluralization
-        return Ember.I18n.t(messageKey, {count: selection.length});
+        return Ember.I18n.t(messageKey, {
+          count: selection.length,
+          item: selection.get('firstObject'),
+          list: selection.join(', ')
+        });
       }
       switch (selection.length) {
         case 0:
           return this.get('prompt') || 'Nothing Selected';
         case 1:
-          return this.getByContentPath(selection.get('firstObject'), 'optionLabelPath');
+          return selection.get('firstObject');
         default:
-          return Ember.String.fmt(this.get('summaryMessage'), selection.length);
+          return Ember.String.fmt(
+            this.get('summaryMessage'),
+            selection.length,
+            selection.get('firstObject'),
+            selection.join(', ')
+          );
       }
     }
   ),
