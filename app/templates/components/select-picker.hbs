@@ -48,7 +48,7 @@
         {{#unless item.first}}<li class="divider" role="presentation"></li>{{/unless}}
         <li class="dropdown-header" role="presentation">{{item.group}}</li>
       {{/if}}
-      <li role="presentation" {{bind-attr class="item.selected:selected"}}>
+      <li role="presentation" {{bind-attr class="item.active:active item.selected:selected"}}>
         <a role="menuitem" tabindex="-1" {{action "selectItem" item}}>
           {{item.label}}
           <span {{bind-attr class=":glyphicon :glyphicon-ok :check-mark item.selected::hidden"}}></span>
