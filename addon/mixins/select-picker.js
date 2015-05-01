@@ -178,14 +178,16 @@ var SelectPickerMixin = Ember.Mixin.create({
   },
 
   selectionSummary: Ember.computed(
-    'selection.@each', 'prompt',
+    'selection.@each', 'prompt', 'summaryMessage',
     function() {
       var selection = this.selectionAsArray();
-      if (Ember.I18n) {
-        return Ember.I18n.t(this.get('summaryMessage'), {count: selection.length});
+      var messageKey = this.get('summaryMessageTranslation');
+      if (Ember.I18n && Ember.isPresent(messageKey)) {
+        // I18n for prompt can be managed by using the pluralization feature:
+        // https://github.com/jamesarosen/ember-i18n#pluralization
+        return Ember.I18n.t(messageKey, {count: selection.length});
       }
       switch (selection.length) {
-        // I18n done by promptTranslate property (I18n plugin)
         case 0:
           return this.get('prompt') || 'Nothing Selected';
         case 1:
