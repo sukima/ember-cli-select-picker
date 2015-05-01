@@ -22,7 +22,8 @@ module('Select Picker Integration', {
 });
 
 test('Show and Hide', function(assert) {
-  assert.expect(2);
+  assert.expect(3);
+
   visit('/test-select-picker')
 
   .then(function() {
@@ -38,6 +39,15 @@ test('Show and Hide', function(assert) {
     assert.ok(
       find('#single-picker .dropdown-menu').is(':visible'),
       'dropdown menu should be visible'
+    );
+  })
+
+  .click('#single-picker')
+
+  .then(function() {
+    assert.ok(
+      find('#single-picker .dropdown-menu').is(':hidden'),
+      'dropdown menu should be hidden'
     );
   });
 });
