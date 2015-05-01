@@ -120,6 +120,24 @@ var SelectPickerMixin = Ember.Mixin.create({
     }
   ),
 
+  groupedContentList: Ember.computed(
+    'contentList.@each',
+    function() {
+      var lastGroup;
+      var result = Ember.A(this.get('contentList'))
+        .map(function(item) {
+          var clonedItem = Ember.copy(item);
+          if (clonedItem.group === lastGroup) {
+            clonedItem.group = null;
+          } else {
+            lastGroup = clonedItem.group;
+          }
+          return clonedItem;
+        });
+      return Ember.A(result);
+    }
+  ),
+
   contentPathName: function(pathName) {
     return this.getWithDefault(pathName, '').substr(8);
   },
