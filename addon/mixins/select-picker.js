@@ -1,8 +1,5 @@
 import Ember from 'ember';
 
-// TODO: features:
-//   - Keyboard support
-
 var selectOneOf = function(someSelected,
                            allSelected,
                            noneSelected) {
@@ -120,7 +117,7 @@ var SelectPickerMixin = Ember.Mixin.create({
     }
   ),
 
-  groupedContentList: Ember.computed(
+  groupedContentListWithoutActive: Ember.computed(
     'contentList.@each.group',
     function() {
       var lastGroup;
@@ -136,6 +133,8 @@ var SelectPickerMixin = Ember.Mixin.create({
       return result;
     }
   ),
+
+  groupedContentList: Ember.computed.alias('groupedContentListWithoutActive'),
 
   contentPathName: function(pathName) {
     return this.getWithDefault(pathName, '').substr(8);

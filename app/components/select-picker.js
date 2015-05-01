@@ -40,6 +40,9 @@ var SelectPickerComponent = Ember.Component.extend(
   actions: {
     showHide: function () {
       this.toggleProperty('showDropdown');
+    },
+    closeDropdown: function() {
+      this.set('showDropdown', false);
     }
   }
 });
