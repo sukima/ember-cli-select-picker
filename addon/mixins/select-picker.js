@@ -94,13 +94,13 @@ var SelectPickerMixin = Ember.Mixin.create({
           var value = Ember.get(item, valuePath);
           var group = groupPath ? Ember.get(item, groupPath) : null;
           if (searchMatcher(group) || searchMatcher(label)) {
-            return {
+            return Ember.Object.create({
               item:     item,
               group:    group,
               label:    label,
               value:    value,
               selected: selection.contains(item)
-            };
+            });
           } else {
             return null;
           }
@@ -108,15 +108,32 @@ var SelectPickerMixin = Ember.Mixin.create({
 
       // Ember Addons need to be coded as if Ember.EXTEND_PROTOTYPES = false
       // Because of this we need to manually extend our native array from the
-      // above map() function. compact() is an Ember function and so returns
-      // an Ember.Array which is what we want anyway.
-      result = Ember.A(result).compact();
+      // above map() function. Even though compact() is an Ember function it
+      // too sufferes from the same fate.
+      result = Ember.A(Ember.A(result).compact());
 
-      if (result[0]) {
-        result[0].first = true;
+      if (!Ember.isEmpty(result)) {
+        result.get('firstObject').set('first', true);
       }
 
-      return Ember.A(result);
+      return result;
+    }
+  ),
+
+  groupedContentList: Ember.computed(
+    'contentList.@each.group',
+    function() {
+      var lastGroup;
+      var result = Ember.A(this.get('contentList'));
+      result.forEach(function(item) {
+        let group = item.get('group');
+        if (group === lastGroup) {
+          item.set('group', null);
+        } else {
+          lastGroup = group;
+        }
+      });
+      return result;
     }
   ),
 
@@ -161,7 +178,7 @@ var SelectPickerMixin = Ember.Mixin.create({
   },
 
   selectionSummary: Ember.computed(
-    'selection.@each',
+    'selection.@each', 'prompt',
     function() {
       var selection = this.selectionAsArray();
       if (Ember.I18n) {
@@ -172,7 +189,7 @@ var SelectPickerMixin = Ember.Mixin.create({
         case 0:
           return this.get('prompt') || 'Nothing Selected';
         case 1:
-          return this.getByContentPath(selection[0], 'optionLabelPath');
+          return this.getByContentPath(selection.get('firstObject'), 'optionLabelPath');
         default:
           return Ember.String.fmt(this.get('summaryMessage'), selection.length);
       }

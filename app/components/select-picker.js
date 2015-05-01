@@ -9,6 +9,8 @@ var SelectPickerComponent = Ember.Component.extend(
   selectAllLabel:  'All',
   selectNoneLabel: 'None',
 
+  nativeMobile: true,
+
   classNames: ['select-picker'],
 
   didInsertElement: function() {
@@ -28,24 +30,6 @@ var SelectPickerComponent = Ember.Component.extend(
   willDestroyElement: function() {
     $(document).off('.' + this.get('elementId'));
   },
-
-  groupedContentList: Ember.computed(
-    'contentList.@each',
-    function() {
-      var lastGroup;
-      var result = Ember.A(this.get('contentList'))
-        .map(function(item) {
-          var clonedItem = Ember.copy(item);
-          if (clonedItem.group === lastGroup) {
-            clonedItem.group = null;
-          } else {
-            lastGroup = clonedItem.group;
-          }
-          return clonedItem;
-        });
-      return Ember.A(result);
-    }
-  ),
 
   actions: {
     showHide: function () {

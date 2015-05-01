@@ -9,6 +9,8 @@ var ListPickerComponent = Ember.Component.extend(
   selectAllLabel:  'Select All',
   selectNoneLabel: 'Select None',
 
+  nativeMobile: false,
+
   classNames: ['select-picker', 'list-picker'],
 
   groupedContentList: Ember.computed(
@@ -16,18 +18,18 @@ var ListPickerComponent = Ember.Component.extend(
     function() {
       var groups = Ember.A();
       var content = Ember.A();
-      Ember.A(this.get('contentList')).forEach(function(item) {
-        var header;
-        var groupIndex = groups.indexOf(item.group);
+      this.get('contentList').forEach(function(item) {
+        var header, itemGroup = item.get('group');
+        var groupIndex = groups.indexOf(itemGroup);
         if (groupIndex < 0) {
-          header = item.group;
+          header = itemGroup;
           groups.push(header);
-          content.push({
+          content.push(Ember.Object.create({
             header: header,
             items: Ember.A([item])
-          });
+          }));
         } else {
-          content[groupIndex].items.push(item);
+          content[groupIndex].get('items').push(item);
         }
       });
       return content;
