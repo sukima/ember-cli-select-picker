@@ -1,8 +1,5 @@
 import Ember from 'ember';
 
-// TODO: features:
-//   - Keyboard support
-
 var selectOneOf = function(someSelected,
                            allSelected,
                            noneSelected) {
