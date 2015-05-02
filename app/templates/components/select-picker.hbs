@@ -19,8 +19,10 @@
           {{bind-attr disabled=disabled}}
           {{action "showHide"}}
           aria-expanded="true">
-    <span class="pull-left">{{selectionSummary}}</span>
-    <span class="caret"></span>
+    <span class="pull-left">
+      {{selectionSummary}}
+      <span {{bind-attr class="selectionBadge:badge:caret"}}>{{selectionBadge}}</span>
+    </span>
   </button>
   <ul class="dropdown-menu" role="menu" {{bind-attr aria-labelledby=menuButtonId}}>
     {{#if liveSearch}}
