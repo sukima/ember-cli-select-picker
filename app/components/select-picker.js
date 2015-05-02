@@ -13,6 +13,16 @@ var SelectPickerComponent = Ember.Component.extend(
 
   classNames: ['select-picker'],
 
+  badgeEnabled: Ember.computed.and('showBadge', 'multiple'),
+  selectionBadge: Ember.computed(
+    'selection.length', 'badgeEnabled',
+    function() {
+      var enabled = this.get('badgeEnabled');
+      var selected = this.get('selection.length');
+      return (enabled && selected && selected !== 0) ? selected : "";
+    }
+  ),
+
   setupDom: Ember.on('didInsertElement', function() {
     var eventName = 'click.' + this.get('elementId');
     var _this = this;

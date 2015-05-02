@@ -55,7 +55,7 @@ test('Show and Hide', function(assert) {
 test('Select multiple', function(assert) {
   var isChecked = checkMarkVisibilityTest('multiple-picker');
 
-  assert.expect(3);
+  assert.expect(4);
 
   visit('/test-select-picker')
 
@@ -70,6 +70,11 @@ test('Select multiple', function(assert) {
     assert.ok(isChecked(0), 'first item should show a check mark');
     assert.ok(isChecked(1), 'second item should show a check mark');
     assert.ok(!isChecked(2), 'third item should not show a check mark');
+
+    assert.equal(
+      find('#multiple-picker .badge').text(), 2,
+      'badge should show number of selected items'
+    );
   });
 });
 
