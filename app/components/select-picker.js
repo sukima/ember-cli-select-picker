@@ -6,6 +6,8 @@ var I18nProps = (Ember.I18n && Ember.I18n.TranslateableProperties) || {};
 var SelectPickerComponent = Ember.Component.extend(
   SelectPickerMixin, I18nProps, {
 
+  prompt:          'Nothing Selected',
+  summaryMessage:  '%@ items selected',
   selectAllLabel:  'All',
   selectNoneLabel: 'None',
 

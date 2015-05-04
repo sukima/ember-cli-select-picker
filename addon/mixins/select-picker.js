@@ -45,12 +45,8 @@ var isAdvancedSearch = function(liveSearch) {
 };
 
 var SelectPickerMixin = Ember.Mixin.create({
-  liveSearch:     false,
-  showDropdown:   false,
-  prompt:         false,
-  content:        [],
-  selection:      [],
-  summaryMessage: '%@ items selected',
+  liveSearch:   false,
+  showDropdown: false,
 
   menuButtonId: Ember.computed(
     'elementId',
