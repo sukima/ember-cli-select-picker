@@ -13,6 +13,18 @@ var KeyboardSelectPickerComponent = SelectPicker.extend(
 
   classNames: ['select-picker', 'keyboard-select-picker'],
 
+  groupedContentList: Ember.computed(
+    'groupedContentListWithoutActive', 'activeIndex',
+    function() {
+      var activeIndex = this.get('activeIndex');
+      var result = Ember.A(this.get('groupedContentListWithoutActive'));
+      result.forEach(function(item, index) {
+        item.set('active', index === activeIndex);
+      });
+      return result;
+    }
+  ),
+
   activeIndex: Ember.computed(
     'activeCursor', 'contentList.length',
     function() {
@@ -43,18 +55,6 @@ var KeyboardSelectPickerComponent = SelectPicker.extend(
     'tab': 'activeNext',
     'esc': 'closeDropdown'
   },
-
-  groupedContentList: Ember.computed(
-    'groupedContentListWithoutActive', 'activeIndex',
-    function() {
-      var activeIndex = this.get('activeIndex');
-      var result = Ember.A(this.get('groupedContentListWithoutActive'));
-      result.forEach(function(item, index) {
-        item.set('active', index === activeIndex);
-      });
-      return result;
-    }
-  ),
 
   actions: {
     activeNext: function() {
