@@ -45,12 +45,8 @@ var isAdvancedSearch = function(liveSearch) {
 };
 
 var SelectPickerMixin = Ember.Mixin.create({
-  liveSearch:     false,
-  showDropdown:   false,
-  prompt:         false,
-  content:        [],
-  selection:      [],
-  summaryMessage: '%@ items selected',
+  liveSearch:   false,
+  showDropdown: false,
 
   menuButtonId: Ember.computed(
     'elementId',
@@ -62,8 +58,9 @@ var SelectPickerMixin = Ember.Mixin.create({
   selectionAsArray: function() {
     var selection = this.get('selection');
     if (Ember.isNone(selection)) {
-      return Ember.A();
-    } else if (!Ember.isArray(selection)) {
+      selection = this.get('value');
+    }
+    if (!Ember.isArray(selection)) {
       return Ember.A([selection]);
     }
     return Ember.A(selection);
@@ -176,40 +173,34 @@ var SelectPickerMixin = Ember.Mixin.create({
     }
   },
 
-  selectionLabels: Ember.computed(
-    'selection.@each',
-    function() {
-      var result = this.selectionAsArray()
-        .map(Ember.run.bind(this, function(item) {
-          return this.getByContentPath(item, 'optionLabelPath');
-        }));
-      return Ember.A(result);
-    }
-  ),
+  selectionLabels: Ember.computed.mapBy('selectedContentList', 'label'),
 
   selectionSummary: Ember.computed(
-    'selectionLabels.@each', 'prompt', 'summaryMessage',
+    'selectionLabels.[]', 'prompt', 'summaryMessage', 'summaryMessageKey',
     function() {
       var selection = this.get('selectionLabels');
-      var messageKey = this.get('summaryMessageTranslation');
+      var count = selection.get('length');
+      var messageKey = this.get('summaryMessageKey');
       if (Ember.I18n && Ember.isPresent(messageKey)) {
-        // I18n for prompt can be managed by using the pluralization feature:
-        // https://github.com/jamesarosen/ember-i18n#pluralization
+        // TODO: Allow an enablePrompt="false" feature
+        if (count === 0) {
+          return this.get('prompt');
+        }
         return Ember.I18n.t(messageKey, {
-          count: selection.length,
+          count: count,
           item: selection.get('firstObject'),
           list: selection.join(', ')
         });
       }
-      switch (selection.length) {
+      switch (count) {
         case 0:
-          return this.get('prompt') || 'Nothing Selected';
+          return this.get('prompt');
         case 1:
           return selection.get('firstObject');
         default:
           return Ember.String.fmt(
             this.get('summaryMessage'),
-            selection.length,
+            count,
             selection.get('firstObject'),
             selection.join(', ')
           );
