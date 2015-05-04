@@ -57,18 +57,20 @@ var SelectPickerMixin = Ember.Mixin.create({
 
   selectionAsArray: function() {
     var selection = this.get('selection');
+    // Ember.Select can set the value of selection to
+    // any of null, [], [Object, ...], or Object
     if (Ember.isNone(selection)) {
-      selection = this.get('value');
+      return  Ember.A();
     }
-    if (!Ember.isArray(selection)) {
-      return Ember.A([selection]);
+    if (Ember.isArray(selection)) {
+      return Ember.A(selection);
     }
-    return Ember.A(selection);
+    return Ember.A([selection]);
   },
 
   contentList: Ember.computed(
-    'selection.@each', 'content.@each', 'optionGroupPath', 'optionLabelPath',
-    'optionValuePath', 'searchFilter',
+    'selection.@each', 'content.@each', 'optionGroupPath',
+    'optionLabelPath', 'optionValuePath', 'searchFilter',
     function() {
       // Ember.Select does not include the content prefix for optionGroupPath
       var groupPath = this.get('optionGroupPath');
@@ -235,9 +237,9 @@ var SelectPickerMixin = Ember.Mixin.create({
       if (!this.get('disabled')) {
         if (this.get('multiple')) {
           this.set('keepDropdownOpen', true);
-          this.toggleSelection(selected.item);
+          this.toggleSelection(selected.get('item'));
         } else {
-          this.set('selection', selected.item);
+          this.set('selection', selected.get('item'));
         }
       }
       return true;
