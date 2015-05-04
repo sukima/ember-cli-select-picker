@@ -242,7 +242,7 @@ var SelectPickerMixin = Ember.Mixin.create({
           this.set('selection', selected.get('item'));
         }
       }
-      return true;
+      return false;
     },
 
     selectAllNone: function (listName) {
@@ -251,6 +251,7 @@ var SelectPickerMixin = Ember.Mixin.create({
         .forEach(function (item) {
           _this.send('selectItem', item);
         });
+      return false;
     },
 
     toggleSelectAllNone: function () {
@@ -261,10 +262,12 @@ var SelectPickerMixin = Ember.Mixin.create({
         listName = 'unselectedContentList';
       }
       this.send('selectAllNone', listName);
+      return false;
     },
 
     clearFilter: function() {
       this.set('searchFilter', null);
+      return false;
     }
   }
 });
