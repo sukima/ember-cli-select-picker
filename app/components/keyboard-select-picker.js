@@ -2,6 +2,17 @@ import Ember from 'ember';
 import SelectPicker from './select-picker';
 import KeyboardShortcutsMixin from 'ember-keyboard-shortcuts/mixins/component';
 
+function makeKeyboardAction(fn) {
+  return function() {
+    if (!this.get('showDropdown')) {
+      // ignore keyboard input on components that are not *in focus*
+      return true;
+    }
+    fn.apply(this, arguments);
+    return false;
+  };
+}
+
 var KeyboardSelectPickerComponent = SelectPicker.extend(
   KeyboardShortcutsMixin, {
 
@@ -12,6 +23,18 @@ var KeyboardSelectPickerComponent = SelectPicker.extend(
   activeCursor: null,
 
   classNames: ['select-picker', 'keyboard-select-picker'],
+
+  groupedContentList: Ember.computed(
+    'groupedContentListWithoutActive', 'activeIndex',
+    function() {
+      var activeIndex = this.get('activeIndex');
+      var result = Ember.A(this.get('groupedContentListWithoutActive'));
+      result.forEach(function(item, index) {
+        item.set('active', index === activeIndex);
+      });
+      return result;
+    }
+  ),
 
   activeIndex: Ember.computed(
     'activeCursor', 'contentList.length',
@@ -33,10 +56,7 @@ var KeyboardSelectPickerComponent = SelectPicker.extend(
   ),
 
   keyboardShortcuts: {
-    'enter': function() {
-      this.send('selectItem', this.get('activeItem'));
-      return false;
-    },
+    'enter': 'selectActiveItem',
     'up': 'activePrev',
     'down': 'activeNext',
     'shift+tab': 'activePrev',
@@ -44,33 +64,26 @@ var KeyboardSelectPickerComponent = SelectPicker.extend(
     'esc': 'closeDropdown'
   },
 
-  groupedContentList: Ember.computed(
-    'groupedContentListWithoutActive', 'activeIndex',
-    function() {
-      var activeIndex = this.get('activeIndex');
-      var result = Ember.A(this.get('groupedContentListWithoutActive'));
-      result.forEach(function(item, index) {
-        item.set('active', index === activeIndex);
-      });
-      return result;
-    }
-  ),
-
   actions: {
-    activeNext: function() {
+    activeNext: makeKeyboardAction(function() {
       if (Ember.isNone(this.get('activeCursor'))) {
         this.set('activeCursor', 0);
       } else {
         this.incrementProperty('activeCursor');
       }
-    },
-    activePrev: function() {
+    }),
+
+    activePrev: makeKeyboardAction(function() {
       if (Ember.isNone(this.get('activeCursor'))) {
         this.set('activeCursor', -1);
       } else {
         this.decrementProperty('activeCursor');
       }
-    }
+    }),
+
+    selectActiveItem: makeKeyboardAction(function() {
+      this.send('selectItem', this.get('activeItem'));
+    }),
   }
 });
 

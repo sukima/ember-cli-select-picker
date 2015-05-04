@@ -57,18 +57,20 @@ var SelectPickerMixin = Ember.Mixin.create({
 
   selectionAsArray: function() {
     var selection = this.get('selection');
+    // Ember.Select can set the value of selection to
+    // any of null, [], [Object, ...], or Object
     if (Ember.isNone(selection)) {
-      selection = this.get('value');
+      return  Ember.A();
     }
-    if (!Ember.isArray(selection)) {
-      return Ember.A([selection]);
+    if (Ember.isArray(selection)) {
+      return Ember.A(selection);
     }
-    return Ember.A(selection);
+    return Ember.A([selection]);
   },
 
   contentList: Ember.computed(
-    'selection.@each', 'content.@each', 'optionGroupPath', 'optionLabelPath',
-    'optionValuePath', 'searchFilter',
+    'selection.@each', 'content.@each', 'optionGroupPath',
+    'optionLabelPath', 'optionValuePath', 'searchFilter',
     function() {
       // Ember.Select does not include the content prefix for optionGroupPath
       var groupPath = this.get('optionGroupPath');
@@ -156,6 +158,9 @@ var SelectPickerMixin = Ember.Mixin.create({
 
   makeSearchMatcher: function () {
     var searchFilter = this.get('searchFilter');
+    // item can be null, string, or SafeString.
+    // SafeString does not have toLowerCase() so use toString() to
+    // normalize it.
     if (Ember.isEmpty(searchFilter)) {
       return function () {
         return true; // Show all
@@ -163,12 +168,20 @@ var SelectPickerMixin = Ember.Mixin.create({
     } else if (isAdvancedSearch(this.get('liveSearch'))) {
       searchFilter = new RegExp(searchFilter.split('').join('.*'), 'i');
       return function (item) {
-        return item && searchFilter.test(item);
+        if (Ember.isNone(item)) {
+          return false;
+        } else {
+          return searchFilter.test(item.toString());
+        }
       };
     } else {
       searchFilter = searchFilter.toLowerCase();
       return function (item) {
-        return item && item.toLowerCase().indexOf(searchFilter) >= 0;
+        if (Ember.isNone(item)) {
+          return false;
+        } else {
+          return item.toString().toLowerCase().indexOf(searchFilter) >= 0;
+        }
       };
     }
   },
@@ -224,12 +237,12 @@ var SelectPickerMixin = Ember.Mixin.create({
       if (!this.get('disabled')) {
         if (this.get('multiple')) {
           this.set('keepDropdownOpen', true);
-          this.toggleSelection(selected.item);
+          this.toggleSelection(selected.get('item'));
         } else {
-          this.set('selection', selected.item);
+          this.set('selection', selected.get('item'));
         }
       }
-      return true;
+      return false;
     },
 
     selectAllNone: function (listName) {
@@ -238,6 +251,7 @@ var SelectPickerMixin = Ember.Mixin.create({
         .forEach(function (item) {
           _this.send('selectItem', item);
         });
+      return false;
     },
 
     toggleSelectAllNone: function () {
@@ -248,10 +262,12 @@ var SelectPickerMixin = Ember.Mixin.create({
         listName = 'unselectedContentList';
       }
       this.send('selectAllNone', listName);
+      return false;
     },
 
     clearFilter: function() {
       this.set('searchFilter', null);
+      return false;
     }
   }
 });
