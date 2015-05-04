@@ -156,6 +156,9 @@ var SelectPickerMixin = Ember.Mixin.create({
 
   makeSearchMatcher: function () {
     var searchFilter = this.get('searchFilter');
+    // item can be null, string, or SafeString.
+    // SafeString does not have toLowerCase() so use toString() to
+    // normalize it.
     if (Ember.isEmpty(searchFilter)) {
       return function () {
         return true; // Show all
@@ -163,12 +166,20 @@ var SelectPickerMixin = Ember.Mixin.create({
     } else if (isAdvancedSearch(this.get('liveSearch'))) {
       searchFilter = new RegExp(searchFilter.split('').join('.*'), 'i');
       return function (item) {
-        return item && searchFilter.test(item);
+        if (Ember.isNone(item)) {
+          return false;
+        } else {
+          return searchFilter.test(item.toString());
+        }
       };
     } else {
       searchFilter = searchFilter.toLowerCase();
       return function (item) {
-        return item && item.toLowerCase().indexOf(searchFilter) >= 0;
+        if (Ember.isNone(item)) {
+          return false;
+        } else {
+          return item.toString().toLowerCase().indexOf(searchFilter) >= 0;
+        }
       };
     }
   },
