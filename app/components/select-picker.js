@@ -16,31 +16,35 @@ var SelectPickerComponent = Ember.Component.extend(
   classNames: ['select-picker'],
 
   badgeEnabled: Ember.computed.and('showBadge', 'multiple'),
+
   selectionBadge: Ember.computed(
     'selection.length', 'badgeEnabled',
     function() {
       var enabled = this.get('badgeEnabled');
       var selected = this.get('selection.length');
-      return (enabled && selected && selected !== 0) ? selected : "";
+      return (enabled && selected && selected !== 0) ? selected : '';
     }
   ),
 
   setupDom: Ember.on('didInsertElement', function() {
-    var eventName = 'click.' + this.get('elementId');
-    var _this = this;
-    $(document).on(eventName, function (e) {
-      if (_this.get('keepDropdownOpen')) {
-        _this.set('keepDropdownOpen', false);
-        return;
-      }
-      if (_this.element && !$.contains(_this.element, e.target)) {
-        _this.set('showDropdown', false);
-      }
-    });
+    $(document).on(
+      `click.${this.get('elementId')}`,
+      Ember.run.bind(this, this.hideDropdownMenu)
+    );
   }),
 
+  hideDropdownMenu: function(evt) {
+    if (this.get('keepDropdownOpen')) {
+      this.set('keepDropdownOpen', false);
+      return;
+    }
+    if (this.element && !$.contains(this.element, evt.target)) {
+      this.send('closeDropdown');
+    }
+  },
+
   teardownDom: Ember.on('willDestroyElement', function() {
-    $(document).off('.' + this.get('elementId'));
+    $(document).off(`.${this.get('elementId')}`);
   }),
 
   actions: {
