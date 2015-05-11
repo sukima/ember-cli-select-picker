@@ -1,3 +1,10 @@
+/* Fix to enable Ember actions
+ * http://stackoverflow.com/a/17490775/227176
+ */
+.select-picker .btn-group .dropdown-menu li a {
+  cursor: pointer;
+}
+
 .select-picker .btn-group .dropdown-menu li.selected a span.check-mark {
   position:   absolute;
   display:    inline-block;
