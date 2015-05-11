@@ -189,7 +189,7 @@ var SelectPickerMixin = Ember.Mixin.create({
   selectionLabels: Ember.computed.mapBy('selectedContentList', 'label'),
 
   selectionSummary: Ember.computed(
-    'selectionLabels.[]', 'prompt', 'summaryMessage', 'summaryMessageKey',
+    'selectionLabels.[]', 'nothingSelectedMessage', 'summaryMessage', 'summaryMessageKey',
     function() {
       var selection = this.get('selectionLabels');
       var count = selection.get('length');
@@ -197,7 +197,7 @@ var SelectPickerMixin = Ember.Mixin.create({
       if (Ember.I18n && Ember.isPresent(messageKey)) {
         // TODO: Allow an enablePrompt="false" feature
         if (count === 0) {
-          return this.get('prompt');
+          return this.get('nothingSelectedMessage');
         }
         return Ember.I18n.t(messageKey, {
           count: count,
@@ -207,7 +207,7 @@ var SelectPickerMixin = Ember.Mixin.create({
       }
       switch (count) {
         case 0:
-          return this.get('prompt');
+          return this.get('nothingSelectedMessage');
         case 1:
           return selection.get('firstObject');
         default:
