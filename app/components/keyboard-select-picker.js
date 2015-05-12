@@ -82,7 +82,10 @@ var KeyboardSelectPickerComponent = SelectPicker.extend(
     }),
 
     selectActiveItem: makeKeyboardAction(function() {
-      this.send('selectItem', this.get('activeItem'));
+      var item = this.get('activeItem');
+      if (Ember.isPresent(item)) {
+        this.send('selectItem', item);
+      }
     }),
   }
 });
