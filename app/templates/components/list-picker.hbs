@@ -33,10 +33,12 @@
         <button type="button" class="btn btn-default" {{action "selectAllNone" "selectedContentList"}}>{{selectNoneLabel}}</button>
       </div>
     {{else}}
-      <button type="button" class="btn btn-default btn-block" {{action "toggleSelectAllNone"}}>
-        {{selectAllNoneLabel}}
-        <span {{bind-attr class=":pull-right :glyphicon glyphiconClass"}}></span>
-      </button>
+      <div role="group" class="btn-group-vertical btn-block">
+        <button type="button" class="btn btn-default" {{action "toggleSelectAllNone"}}>
+          {{selectAllNoneLabel}}
+          <span {{bind-attr class=":check-mark :glyphicon glyphiconClass"}}></span>
+        </button>
+      </div>
     {{/if}}
   {{/if}}
   {{#each groupedContentList as |group|}}
@@ -49,7 +51,7 @@
                 {{action "selectItem" item}}
                 {{bind-attr class=":btn :btn-default item.selected:active"}}>
           {{item.label}}
-          <span {{bind-attr class=":pull-right :glyphicon :glyphicon-ok :check-mark item.selected::invisible"}}></span>
+          <span {{bind-attr class=":glyphicon :glyphicon-ok :check-mark item.selected::invisible"}}></span>
         </button>
       {{/each}}
     </div>
