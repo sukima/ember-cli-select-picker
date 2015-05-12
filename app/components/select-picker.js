@@ -14,6 +14,7 @@ var SelectPickerComponent = Ember.Component.extend(
   nativeMobile: true,
 
   classNames: ['select-picker', 'btn-group'],
+  buttonClass: 'btn-default',
 
   badgeEnabled: Ember.computed.and('showBadge', 'multiple'),
 
