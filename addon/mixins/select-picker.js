@@ -199,11 +199,19 @@ var SelectPickerMixin = Ember.Mixin.create({
         if (count === 0) {
           return this.get('nothingSelectedMessage');
         }
-        return Ember.I18n.t(messageKey, {
+        var item = selection.get('firstObject');
+        var translation = Ember.I18n.t(messageKey, {
           count: count,
-          item: selection.get('firstObject'),
+          item: item,
           list: selection.join(', ')
         });
+        // If the item we're inserting into our selection message was a
+        // SafeString then then translation needs to be marked as well in order
+        // for any html in the original not to get escaped.
+        if (item && item.toHTML) {
+          translation = Ember.String.htmlSafe(translation);
+        }
+        return translation;
       }
       switch (count) {
         case 0:
