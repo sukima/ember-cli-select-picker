@@ -44,6 +44,20 @@ var isAdvancedSearch = function(liveSearch) {
   );
 };
 
+var promiseResolver = function(prop) {
+  return Ember.computed(prop, function() {
+    var _this = this;
+    var value = this.get(prop);
+    if (value && value.then) {
+      value.then(function(resolved) {
+        _this.set(`_${prop}`, resolved);
+      });
+    } else {
+      return value;
+    }
+  });
+};
+
 var SelectPickerMixin = Ember.Mixin.create({
   liveSearch:   false,
   showDropdown: false,
@@ -56,7 +70,7 @@ var SelectPickerMixin = Ember.Mixin.create({
   ),
 
   selectionAsArray: function() {
-    var selection = this.get('selection');
+    var selection = this.get('_selection');
     // Ember.Select can set the value of selection to
     // any of null, [], [Object, ...], or Object
     if (Ember.isNone(selection)) {
@@ -68,8 +82,11 @@ var SelectPickerMixin = Ember.Mixin.create({
     return Ember.A([selection]);
   },
 
+  _selection: promiseResolver('selection'),
+  _content: promiseResolver('content'),
+
   contentList: Ember.computed(
-    'selection.@each', 'content.@each', 'optionGroupPath',
+    '_selection.@each', '_content.@each', 'optionGroupPath',
     'optionLabelPath', 'optionValuePath', 'searchFilter',
     function() {
       // Ember.Select does not include the content prefix for optionGroupPath
@@ -84,7 +101,7 @@ var SelectPickerMixin = Ember.Mixin.create({
       var selection     = this.selectionAsArray();
       var searchMatcher = this.makeSearchMatcher();
 
-      var result = Ember.A(this.get('content'))
+      var result = Ember.A(this.get('_content'))
         .map(function(item) {
           var label = Ember.get(item, labelPath);
           var value = Ember.get(item, valuePath);
@@ -143,13 +160,13 @@ var SelectPickerMixin = Ember.Mixin.create({
     return Ember.get(obj, this.contentPathName(pathName));
   },
 
-  selectedContentList:   Ember.computed.filterBy('contentList', 'selected'),
+  selectedContentList:   Ember.computed.filterBy('contentList', '_selected'),
   unselectedContentList: Ember.computed.setDiff('contentList', 'selectedContentList'),
-  hasSelectedItems:      Ember.computed.gt('selection.length', 0),
+  hasSelectedItems:      Ember.computed.gt('_selection.length', 0),
   allItemsSelected: Ember.computed(
-    'selection.length', 'content.length',
+    '_selection.length', '_content.length',
     function() {
-      return Ember.isEqual(this.get('selection.length'), this.get('content.length'));
+      return Ember.isEqual(this.get('_selection.length'), this.get('_content.length'));
     }
   ),
 
@@ -232,7 +249,7 @@ var SelectPickerMixin = Ember.Mixin.create({
   clearSearchDisabled: Ember.computed.empty('searchFilter'),
 
   toggleSelection: function(value) {
-    var selection = this.get('selection');
+    var selection = this.get('_selection');
     if (selection.contains(value)) {
       selection.removeObject(value);
     } else {
@@ -247,7 +264,7 @@ var SelectPickerMixin = Ember.Mixin.create({
           this.set('keepDropdownOpen', true);
           this.toggleSelection(selected.get('item'));
         } else {
-          this.set('selection', selected.get('item'));
+          this.set('_selection', selected.get('item'));
         }
       }
       return false;
