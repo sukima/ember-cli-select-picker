@@ -9,7 +9,32 @@ const contentArray = [
 ];
 
 export default function() {
-  test('updates contentList when selection changes', function(assert) {
+  test('updates contentList when selection changes (single)', function(assert) {
+    assert.expect(2);
+
+    var component = this.subject({
+      content: contentArray,
+      selection: Ember.A(),
+      optionValuePath: 'content.id',
+      optionLabelPath: 'content.name'
+    });
+
+    assert.ok(
+      Ember.isNone(component.get('value')),
+      'no items should be selected'
+    );
+
+    Ember.run(function() {
+      component.send('selectItem', component.get('contentList.firstObject'));
+    });
+
+    assert.ok(
+      Ember.isPresent(component.get('value')),
+      'one item should be selected'
+    );
+  });
+
+  test('updates contentList when selection changes (multiple)', function(assert) {
     assert.expect(3);
 
     var component = this.subject({
@@ -44,11 +69,11 @@ export default function() {
 
     assert.equal(
       component.get('selection.length'), 1,
-      'no items should be selected'
+      'one item should be selected'
     );
   });
 
-  test('Normal Search', function(assert) {
+  test('Normal Search (multiple)', function(assert) {
     assert.expect(5);
 
     var component = this.subject({
@@ -107,7 +132,7 @@ export default function() {
     );
   });
 
-  test('Advanced Search', function(assert) {
+  test('Advanced Search (multiple)', function(assert) {
     assert.expect(2);
 
     var component = this.subject({

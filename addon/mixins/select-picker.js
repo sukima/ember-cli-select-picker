@@ -247,7 +247,10 @@ var SelectPickerMixin = Ember.Mixin.create({
           this.set('keepDropdownOpen', true);
           this.toggleSelection(selected.get('item'));
         } else {
-          this.set('selection', selected.get('item'));
+          this.setProperties({
+            value: selected.get('value'),
+            selection: selected.get('item')
+          });
         }
       }
       return false;

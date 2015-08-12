@@ -2,7 +2,7 @@
 
 <div id="single-picker">
   {{select-picker content=theContent
-                  selection=singleValue
+                  value=singleValue
                   optionLabelPath="content.name"
                   optionValuePath="content.id"}}
 </div>
@@ -10,22 +10,24 @@
 <div id="multiple-picker">
   {{select-picker content=theContent
                   selection=multipleValue
-                  multiple="true"
-                  showBadge="true"
+                  multiple=true
+                  showBadge=true
                   optionLabelPath="content.name"
                   optionValuePath="content.id"}}
 </div>
 
 <div id="normal-search-picker">
   {{!select-picker content=theContent
+                  multiple=true
                   selection=multipleValue
-                  liveSearch="true"
+                  liveSearch=true
                   optionLabelPath="content.name"
                   optionValuePath="content.id"}}
 </div>
 
 <div id="advanced-search-picker">
   {{!select-picker content=theContent
+                  multiple=true
                   selection=multipleValue
                   liveSearch="advanced"
                   optionLabelPath="content.name"
