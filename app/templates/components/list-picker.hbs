@@ -12,14 +12,14 @@
        optionLabelPath=optionLabelPath
        optionValuePath=optionValuePath}}
 
-<div {{bind-attr class=":bs-select nativeMobile:hidden-xs disabled:disabled"}}>
+<div class="bs-select {{if nativeMobile 'hidden-xs'}} {{if disabled 'disabled'}}">
   {{#if liveSearch}}
     <div class="input-group">
-      {{input type="text" class="search-filter form-control" value=searchFilter action="preventClosing" on="focus"}}
+      {{input type="text" class="search-filter form-control" value=searchFilter focus="preventClosing"}}
       <span class="input-group-btn">
         <button type="button"
                 class="btn btn-default list-picker-clear-filter"
-                {{bind-attr disabled=clearSearchDisabled}}
+                disabled={{clearSearchDisabled}}
                 {{action "clearFilter"}}>
           <span class="glyphicon glyphicon-remove"></span>
         </button>
@@ -36,7 +36,7 @@
       <div role="group" class="btn-group-vertical btn-block">
         <button type="button" class="btn btn-default" {{action "toggleSelectAllNone"}}>
           {{selectAllNoneLabel}}
-          <span {{bind-attr class=":check-mark :glyphicon glyphiconClass"}}></span>
+          <span class="check-mark glyphicon {{glyphiconClass}}"></span>
         </button>
       </div>
     {{/if}}
@@ -49,9 +49,9 @@
       {{#each group.items as |item|}}
         <button role="presentation"
                 {{action "selectItem" item}}
-                {{bind-attr class=":btn :btn-default item.selected:active"}}>
+                class="btn btn-default {{if item.selected 'active'}}">
           {{item.label}}
-          <span {{bind-attr class=":glyphicon :glyphicon-ok :check-mark item.selected::invisible"}}></span>
+          <span class="glyphicon glyphicon-ok check-mark {{unless item.selected 'invisible'}}"></span>
         </button>
       {{/each}}
     </div>

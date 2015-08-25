@@ -69,7 +69,7 @@ var SelectPickerMixin = Ember.Mixin.create({
   },
 
   contentList: Ember.computed(
-    'selection.@each', 'content.@each', 'optionGroupPath',
+    'selection.[]', 'content.[]', 'optionGroupPath',
     'optionLabelPath', 'optionValuePath', 'searchFilter',
     function() {
       // Ember.Select does not include the content prefix for optionGroupPath
@@ -117,7 +117,7 @@ var SelectPickerMixin = Ember.Mixin.create({
   ),
 
   groupedContentListWithoutActive: Ember.computed(
-    'contentList.@each.group',
+    'contentList.[].group',
     function() {
       var lastGroup;
       var result = Ember.A(this.get('contentList'));
@@ -233,6 +233,10 @@ var SelectPickerMixin = Ember.Mixin.create({
 
   toggleSelection: function(value) {
     var selection = this.get('selection');
+    if (Ember.isNone(selection)) {
+      selection = Ember.A();
+      this.set('selection', selection);
+    }
     if (selection.contains(value)) {
       selection.removeObject(value);
     } else {
