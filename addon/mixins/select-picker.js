@@ -1,5 +1,30 @@
 import Ember from 'ember';
 
+// Ember Addons need to be coded as if Ember.EXTEND_PROTOTYPES = false
+// Because of this we need to make our own proxy functions to apply as one offs
+// to native arrays.
+const emberArrayFunc = function(method) {
+  return function(ctx, ...args) {
+    const props = Ember.Enumerable.mixins[0].properties;
+    Ember.assert(
+      `Ember.Enumerable has no method ${method}`,
+      Ember.typeOf(props[method]) === 'function'
+    );
+    const result = props[method].apply(Ember.A(ctx), args);
+    if (Ember.typeOf(result) === 'array') {
+      return Ember.A(result);
+    } else {
+      return result;
+    }
+  };
+};
+const _contains     = emberArrayFunc('contains');
+const _mapBy        = emberArrayFunc('mapBy');
+const _filterBy     = emberArrayFunc('filterBy');
+const _findBy       = emberArrayFunc('findBy');
+const _uniq         = emberArrayFunc('uniq');
+const _compact      = emberArrayFunc('compact');
+
 const selectOneOf = function(someSelected,
                            allSelected,
                            noneSelected) {
@@ -84,7 +109,7 @@ const SelectPickerMixin = Ember.Mixin.create({
       var selection     = this.selectionAsArray();
       var searchMatcher = this.makeSearchMatcher();
 
-      var result = Ember.A(this.get('content'))
+      var result = _compact(Ember.makeArray(this.get('content'))
         .map(function(item) {
           const label = Ember.get(item, labelPath);
           const value = Ember.get(item, valuePath);
@@ -95,21 +120,15 @@ const SelectPickerMixin = Ember.Mixin.create({
               group:    group,
               label:    label,
               value:    value,
-              selected: selection.contains(item)
+              selected: _contains(selection, item)
             });
           } else {
             return null;
           }
-        });
+        }));
 
-      // Ember Addons need to be coded as if Ember.EXTEND_PROTOTYPES = false
-      // Because of this we need to manually extend our native array from the
-      // above map() function. Even though compact() is an Ember function it
-      // too sufferes from the same fate.
-      result = Ember.A(Ember.A(result).compact());
-
-      if (!Ember.isEmpty(result)) {
-        result.get('firstObject').set('first', true);
+      if (Ember.isPresent(result)) {
+        result.set('firstObject.first', true);
       }
 
       return result;
@@ -119,13 +138,13 @@ const SelectPickerMixin = Ember.Mixin.create({
   nestedGroupContentList: Ember.computed(
     'contentList.[].group',
     function() {
-      const contentList = Ember.A(this.get('contentList'));
-      const groups = contentList.mapBy('group').uniq();
+      const contentList = this.get('contentList');
+      const groups = _uniq(_mapBy(contentList, 'group'));
       const results = Ember.A();
       groups.forEach(function(group) {
         results.pushObject(Ember.Object.create({
           name: group,
-          items: contentList.filterBy('group', group)
+          items: _filterBy(contentList, 'group', group)
         }));
       });
       return results;
@@ -229,16 +248,13 @@ const SelectPickerMixin = Ember.Mixin.create({
   clearSearchDisabled: Ember.computed.empty('searchFilter'),
 
   toggleSelection: function(value) {
-    var selection = this.get('selection');
-    if (Ember.isNone(selection)) {
-      selection = Ember.A();
-      this.set('selection', selection);
-    }
-    if (selection.contains(value)) {
+    var selection = Ember.A(this.get('selection'));
+    if (_contains(selection, value)) {
       selection.removeObject(value);
     } else {
       selection.pushObject(value);
     }
+    this.set('selection', selection);
   },
 
   actions: {
@@ -278,7 +294,7 @@ const SelectPickerMixin = Ember.Mixin.create({
       } else if (hasPrompt && Ember.isEmpty(selectedValues[0])) {
         this.setProperties({value: null, selection: null});
       } else {
-        this.send('selectItem', contentList.findBy('value', selectedValues[0]));
+        this.send('selectItem', _findBy(contentList, 'value', selectedValues[0]));
       }
     },
 
