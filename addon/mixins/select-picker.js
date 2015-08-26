@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-var selectOneOf = function(someSelected,
+const selectOneOf = function(someSelected,
                            allSelected,
                            noneSelected) {
   return Ember.computed(
@@ -17,7 +17,7 @@ var selectOneOf = function(someSelected,
   );
 };
 
-var selectOneOfValue = function(someSelectedValue,
+const selectOneOfValue = function(someSelectedValue,
                                 allSelectedValue,
                                 noneSelectedValue) {
   return selectOneOf(
@@ -27,7 +27,7 @@ var selectOneOfValue = function(someSelectedValue,
   );
 };
 
-var selectOneOfProperty = function(someSelectedKey,
+const selectOneOfProperty = function(someSelectedKey,
                                    allSelectedKey,
                                    noneSelectedKey) {
   return selectOneOf(
@@ -37,14 +37,14 @@ var selectOneOfProperty = function(someSelectedKey,
   );
 };
 
-var isAdvancedSearch = function(liveSearch) {
+const isAdvancedSearch = function(liveSearch) {
   return (
     Ember.typeOf(liveSearch) === 'string' &&
     liveSearch.toLowerCase() === 'advanced'
   );
 };
 
-var SelectPickerMixin = Ember.Mixin.create({
+const SelectPickerMixin = Ember.Mixin.create({
   liveSearch:   false,
   showDropdown: false,
 
@@ -77,9 +77,9 @@ var SelectPickerMixin = Ember.Mixin.create({
 
       var result = Ember.A(this.get('content'))
         .map(function(item) {
-          var label = Ember.get(item, labelPath);
-          var value = Ember.get(item, valuePath);
-          var group = groupPath ? Ember.get(item, groupPath) : null;
+          const label = Ember.get(item, labelPath);
+          const value = Ember.get(item, valuePath);
+          const group = groupPath ? Ember.get(item, groupPath) : null;
           if (searchMatcher(group) || searchMatcher(label)) {
             return Ember.Object.create({
               item:     item,
@@ -236,7 +236,7 @@ var SelectPickerMixin = Ember.Mixin.create({
   },
 
   actions: {
-    selectItem: function(selected) {
+    selectItem(selected) {
       if (!this.get('disabled')) {
         if (this.get('multiple')) {
           this.set('keepDropdownOpen', true);
@@ -251,7 +251,7 @@ var SelectPickerMixin = Ember.Mixin.create({
       return false;
     },
 
-    selectAllNone: function (listName) {
+    selectAllNone(listName) {
       var _this = this;
       this.get(listName)
         .forEach(function (item) {
@@ -260,7 +260,7 @@ var SelectPickerMixin = Ember.Mixin.create({
       return false;
     },
 
-    toggleSelectAllNone: function () {
+    toggleSelectAllNone() {
       var listName;
       if (this.get('hasSelectedItems')) {
         listName = 'selectedContentList';
@@ -271,7 +271,7 @@ var SelectPickerMixin = Ember.Mixin.create({
       return false;
     },
 
-    clearFilter: function() {
+    clearFilter() {
       this.set('searchFilter', null);
       return false;
     }
