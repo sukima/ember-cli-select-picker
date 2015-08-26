@@ -1,6 +1,13 @@
-{{partial "components/native-select"}}
+{{#if nativeMobile}}
+  <div class="visible-xs-inline">
+    {{yield}}
+    {{partial "components/native-select"}}
+  </div>
+{{/if}}
 
 <div class="bs-select {{if nativeMobile 'hidden-xs'}} {{if disabled 'disabled'}}">
+  {{yield}}
+
   {{#if liveSearch}}
     <div class="input-group">
       {{input type="text" class="search-filter form-control" value=searchFilter focus="preventClosing"}}

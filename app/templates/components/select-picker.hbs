@@ -1,4 +1,9 @@
-{{partial "components/native-select"}}
+{{#if nativeMobile}}
+  <div class="visible-xs-inline">
+    {{yield}}
+    {{partial "components/native-select"}}
+  </div>
+{{/if}}
 
 <div class="bs-select dropdown {{if nativeMobile 'hidden-xs'}} {{if disabled 'disabled'}} {{if showDropdown 'open'}}">
   <button type="button"
@@ -13,6 +18,9 @@
     </span>
   </button>
   <ul class="dropdown-menu" role="menu" aria-labelledby={{menuButtonId}}>
+    <li>
+      {{yield}}
+    </li>
     {{#if liveSearch}}
       <li>
         {{input type="text" class="search-filter form-control" value=searchFilter focus="preventClosing"}}
