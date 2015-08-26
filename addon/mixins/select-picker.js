@@ -47,6 +47,15 @@ const isAdvancedSearch = function(liveSearch) {
 const SelectPickerMixin = Ember.Mixin.create({
   liveSearch:   false,
   showDropdown: false,
+  promptMessage: 'Please select an option',
+  prompt: Ember.computed.bool('promptMessage'),
+
+  showNativePrompt: Ember.computed(
+    'multiple', 'prompt',
+    function() {
+      return !this.get('multiple') && Ember.isPresent(this.get('prompt'));
+    }
+  ),
 
   menuButtonId: Ember.computed(
     'elementId',
@@ -104,6 +113,22 @@ const SelectPickerMixin = Ember.Mixin.create({
       }
 
       return result;
+    }
+  ),
+
+  nestedGroupContentList: Ember.computed(
+    'contentList.[].group',
+    function() {
+      const contentList = Ember.A(this.get('contentList'));
+      const groups = contentList.mapBy('group').uniq();
+      const results = Ember.A();
+      groups.forEach(function(group) {
+        results.pushObject(Ember.Object.create({
+          name: group,
+          items: contentList.filterBy('group', group)
+        }));
+      });
+      return results;
     }
   ),
 
@@ -258,6 +283,22 @@ const SelectPickerMixin = Ember.Mixin.create({
           _this.send('selectItem', item);
         });
       return false;
+    },
+
+    selectByValue() {
+      const hasPrompt = Ember.isPresent(this.get('prompt'));
+      const contentList = this.get('contentList');
+      const selectedValues = Ember.makeArray(this.$('select').val());
+      if (this.get('multiple')) {
+        console.dir(selectedValues);
+        this.set('selection', contentList.filter(function(item) {
+          return selectedValues.indexOf(item.get('value')) !== -1;
+        }));
+      } else if (hasPrompt && Ember.isEmpty(selectedValues[0])) {
+        this.setProperties({value: null, selection: null});
+      } else {
+        this.send('selectItem', contentList.findBy('value', selectedValues[0]));
+      }
     },
 
     toggleSelectAllNone() {

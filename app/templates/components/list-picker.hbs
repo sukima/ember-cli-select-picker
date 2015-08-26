@@ -1,16 +1,4 @@
-{{view "select"
-       class="native-select form-control"
-       classNameBindings="nativeMobile:visible-xs-inline:hidden"
-       content=content
-       selection=selection
-       value=value
-       title=title
-       prompt=prompt
-       multiple=multiple
-       disabled=disabled
-       optionGroupPath=optionGroupPath
-       optionLabelPath=optionLabelPath
-       optionValuePath=optionValuePath}}
+{{partial "components/native-select"}}
 
 <div class="bs-select {{if nativeMobile 'hidden-xs'}} {{if disabled 'disabled'}}">
   {{#if liveSearch}}

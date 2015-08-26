@@ -1,0 +1,23 @@
+{{#if nativeMobile}}
+<select class="native-select visible-xs-inline form-control"
+        title={{title}}
+        multiple={{multiple}}
+        {{action "selectByValue" on="change"}}>
+  {{#if showNativePrompt}}
+    <option value="">{{promptMessage}}</option>
+  {{/if}}
+  {{#if nestedGroupContentList.firstObject.name}}
+    {{#each nestedGroupContentList as |group|}}
+      <optgroup label={{group.name}}>
+        {{#each group.items as |item|}}
+          <option value={{item.value}} selected={{item.selected}}>{{item.label}}</option>
+        {{/each}}
+      </optgroup>
+    {{/each}}
+  {{else}}
+    {{#each contentList as |item|}}
+      <option value={{item.value}} selected={{item.selected}}>{{item.label}}</option>
+    {{/each}}
+  {{/if}}
+</select>
+{{/if}}
