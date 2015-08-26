@@ -29,10 +29,8 @@
       </div>
     {{/if}}
   {{/if}}
-  {{#each groupedContentList as |group|}}
-    {{#if group.header}}
-      <h4 role="presentation">{{group.header}}</h4>
-    {{/if}}
+  {{#each nestedGroupContentList as |group|}}
+    {{#if group.name}}<h4 role="presentation">{{group.name}}</h4>{{/if}}
     <div role="group" class="btn-group-vertical btn-block list-picker-items-container">
       {{#each group.items as |item|}}
         <button role="presentation"

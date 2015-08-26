@@ -33,17 +33,17 @@
         {{/if}}
       </li>
     {{/if}}
-    {{#each groupedContentList as |item|}}
-      {{#if item.group}}
-        {{#unless item.first}}<li class="divider" role="presentation"></li>{{/unless}}
-        <li class="dropdown-header" role="presentation">{{item.group}}</li>
-      {{/if}}
-      <li role="presentation" class="{{if item.active 'active'}} {{if item.selected 'selected'}}">
-        <a role="menuitem" tabindex="-1" {{action "selectItem" item}}>
-          {{item.label}}
-          <span class="glyphicon glyphicon-ok check-mark {{if item.selected '' 'hidden'}}"></span>
-        </a>
-      </li>
+    {{#each nestedGroupContentList as |group|}}
+      {{#unless group.items.firstObject.first}}<li class="divider" role="presentation"></li>{{/unless}}
+      {{#if group.name}}<li class="dropdown-header" role="presentation">{{group.name}}</li>{{/if}}
+      {{#each group.items as |item|}}
+        <li role="presentation" class="{{if item.active 'active'}} {{if item.selected 'selected'}}">
+          <a role="menuitem" tabindex="-1" {{action "selectItem" item}}>
+            {{item.label}}
+            <span class="glyphicon glyphicon-ok check-mark {{if item.selected '' 'hidden'}}"></span>
+          </a>
+        </li>
+      {{/each}}
     {{/each}}
   </ul>
 </div>
