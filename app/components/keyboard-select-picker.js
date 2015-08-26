@@ -24,15 +24,19 @@ var KeyboardSelectPickerComponent = SelectPicker.extend(
 
   classNames: ['select-picker', 'keyboard-select-picker'],
 
-  groupedContentList: Ember.computed(
-    'groupedContentListWithoutActive', 'activeIndex',
+  previousActiveIndex: 0,
+
+  updateActiveItem: Ember.observer(
+    'activeCursor', 'contentList.length',
     function() {
-      var activeIndex = this.get('activeIndex');
-      var result = Ember.A(this.get('groupedContentListWithoutActive'));
-      result.forEach(function(item, index) {
-        item.set('active', index === activeIndex);
+      const previousActiveIndex = this.get('previousActiveIndex');
+      const activeIndex = this.get('activeIndex');
+      if (Ember.typeOf(activeIndex) !== 'number') { return; }
+      Ember.changeProperties(() => {
+        this.set(`contentList.${previousActiveIndex}.active`, false);
+        this.set(`contentList.${activeIndex}.active`, true);
+        this.set('previousActiveIndex', activeIndex);
       });
-      return result;
     }
   ),
 

@@ -9,13 +9,17 @@ See the [demo][] for examples, usage, and code snippits.
 [1]: http://getbootstrap.com/
 [2]: http://silviomoreto.github.io/bootstrap-select/
 
+## Dependencies
+
+Version 2.0 is designed for Ember CLI 1.13 or greater. If you want to use an older unsupported version of ember take a look at the last 1.x release.
+
 ## Installation
 
 * `ember install ember-cli-select-picker`
 
 ## Using
 
-In your templates simply replace the usual `{{view "select"}}` with `{{select-picker}}`. This addon is implemented as a component since the core Ember team is deprecating views. It is down-grades (read: backwards compatible) to mobile by keeping a select view in sync under the hood.
+In your templates simply replace the usual `{{select …}}` with `{{select-picker …}}`. This addon is implemented as a component since the core Ember team is deprecating views. It is down-grades (read: backwards compatible) to mobile by keeping a select view in sync under the hood.
 
 More options and examples are available on the [demo][] site.
 
