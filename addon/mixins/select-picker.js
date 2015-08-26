@@ -132,25 +132,6 @@ const SelectPickerMixin = Ember.Mixin.create({
     }
   ),
 
-  groupedContentListWithoutActive: Ember.computed(
-    'contentList.[].group',
-    function() {
-      var lastGroup;
-      var result = Ember.A(this.get('contentList'));
-      result.forEach(function(item) {
-        let group = item.get('group');
-        if (group === lastGroup) {
-          item.set('group', null);
-        } else {
-          lastGroup = group;
-        }
-      });
-      return result;
-    }
-  ),
-
-  groupedContentList: Ember.computed.alias('groupedContentListWithoutActive'),
-
   contentPathName: function(pathName) {
     return this.getWithDefault(pathName, '').substr(8);
   },
