@@ -56,16 +56,7 @@ var SelectPickerMixin = Ember.Mixin.create({
   ),
 
   selectionAsArray: function() {
-    var selection = this.get('selection');
-    // Ember.Select can set the value of selection to
-    // any of null, [], [Object, ...], or Object
-    if (Ember.isNone(selection)) {
-      return  Ember.A();
-    }
-    if (Ember.isArray(selection)) {
-      return Ember.A(selection);
-    }
-    return Ember.A([selection]);
+    return Ember.makeArray(this.get('selection'));
   },
 
   contentList: Ember.computed(
