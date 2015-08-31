@@ -18,16 +18,16 @@ const emberArrayFunc = function(method) {
     }
   };
 };
-const _contains     = emberArrayFunc('contains');
-const _mapBy        = emberArrayFunc('mapBy');
-const _filterBy     = emberArrayFunc('filterBy');
-const _findBy       = emberArrayFunc('findBy');
-const _uniq         = emberArrayFunc('uniq');
-const _compact      = emberArrayFunc('compact');
+const _contains = emberArrayFunc('contains');
+const _mapBy    = emberArrayFunc('mapBy');
+const _filterBy = emberArrayFunc('filterBy');
+const _findBy   = emberArrayFunc('findBy');
+const _uniq     = emberArrayFunc('uniq');
+const _compact  = emberArrayFunc('compact');
 
 const selectOneOf = function(someSelected,
-                           allSelected,
-                           noneSelected) {
+                             allSelected,
+                             noneSelected) {
   return Ember.computed(
     'hasSelectedItems', 'allItemsSelected',
     function() {
@@ -43,8 +43,8 @@ const selectOneOf = function(someSelected,
 };
 
 const selectOneOfValue = function(someSelectedValue,
-                                allSelectedValue,
-                                noneSelectedValue) {
+                                  allSelectedValue,
+                                  noneSelectedValue) {
   return selectOneOf(
     function() { return someSelectedValue; },
     function() { return allSelectedValue; },
@@ -53,8 +53,8 @@ const selectOneOfValue = function(someSelectedValue,
 };
 
 const selectOneOfProperty = function(someSelectedKey,
-                                   allSelectedKey,
-                                   noneSelectedKey) {
+                                     allSelectedKey,
+                                     noneSelectedKey) {
   return selectOneOf(
     function() { return this.get(someSelectedKey); },
     function() { return this.get(allSelectedKey); },
