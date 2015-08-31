@@ -259,28 +259,38 @@ const SelectPickerMixin = Ember.Mixin.create({
     this.set('selection', selection);
   },
 
+  selectAnItem: function(selected) {
+    if (!this.get('disabled')) {
+      if (this.get('multiple')) {
+        this.set('keepDropdownOpen', true);
+        this.toggleSelection(selected.get('item'));
+      } else {
+        this.setProperties({
+          // TODO: value will be removed in the future
+          value: selected.get('value'),
+          selection: selected.get('item')
+        });
+      }
+    }
+  },
+
+  sendChangeAction: function() {
+    const changeAction = Ember.get(this, 'attrs.action');
+    if (changeAction) {
+      changeAction(this.get('selection'));
+    }
+  },
+
   actions: {
     selectItem(selected) {
-      if (!this.get('disabled')) {
-        if (this.get('multiple')) {
-          this.set('keepDropdownOpen', true);
-          this.toggleSelection(selected.get('item'));
-        } else {
-          this.setProperties({
-            value: selected.get('value'),
-            selection: selected.get('item')
-          });
-        }
-      }
+      this.selectAnItem(selected);
+      this.sendChangeAction();
       return false;
     },
 
     selectAllNone(listName) {
-      var _this = this;
-      this.get(listName)
-        .forEach(function (item) {
-          _this.send('selectItem', item);
-        });
+      this.get(listName).forEach(Ember.run.bind(this, this.selectAnItem));
+      this.sendChangeAction();
       return false;
     },
 
@@ -289,7 +299,6 @@ const SelectPickerMixin = Ember.Mixin.create({
       const contentList = this.get('contentList');
       const selectedValues = Ember.makeArray(this.$('select').val());
       if (this.get('multiple')) {
-        console.dir(selectedValues);
         this.set('selection', contentList.filter(function(item) {
           return selectedValues.indexOf(item.get('value')) !== -1;
         }));
@@ -298,6 +307,7 @@ const SelectPickerMixin = Ember.Mixin.create({
       } else {
         this.send('selectItem', _findBy(contentList, 'value', selectedValues[0]));
       }
+      this.sendChangeAction();
     },
 
     toggleSelectAllNone() {
