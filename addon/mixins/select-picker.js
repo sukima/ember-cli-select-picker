@@ -106,7 +106,9 @@ const SelectPickerMixin = Ember.Mixin.create({
       // selection is either an object or an array of object depending on the
       // value of the multiple property. Ember.Select maintains the value
       // property.
-      var selection     = this.selectionAsArray();
+      var selection = this.selectionAsArray().map(function(item) {
+        return Ember.get(item, valuePath);
+      });
       var searchMatcher = this.makeSearchMatcher();
 
       var result = _compact(Ember.makeArray(this.get('content'))
@@ -120,7 +122,7 @@ const SelectPickerMixin = Ember.Mixin.create({
               group:    group,
               label:    label,
               value:    value,
-              selected: _contains(selection, item)
+              selected: _contains(selection, value)
             });
           } else {
             return null;
