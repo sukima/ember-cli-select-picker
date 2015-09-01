@@ -18,16 +18,16 @@ const emberArrayFunc = function(method) {
     }
   };
 };
-const _contains     = emberArrayFunc('contains');
-const _mapBy        = emberArrayFunc('mapBy');
-const _filterBy     = emberArrayFunc('filterBy');
-const _findBy       = emberArrayFunc('findBy');
-const _uniq         = emberArrayFunc('uniq');
-const _compact      = emberArrayFunc('compact');
+const _contains = emberArrayFunc('contains');
+const _mapBy    = emberArrayFunc('mapBy');
+const _filterBy = emberArrayFunc('filterBy');
+const _findBy   = emberArrayFunc('findBy');
+const _uniq     = emberArrayFunc('uniq');
+const _compact  = emberArrayFunc('compact');
 
 const selectOneOf = function(someSelected,
-                           allSelected,
-                           noneSelected) {
+                             allSelected,
+                             noneSelected) {
   return Ember.computed(
     'hasSelectedItems', 'allItemsSelected',
     function() {
@@ -43,8 +43,8 @@ const selectOneOf = function(someSelected,
 };
 
 const selectOneOfValue = function(someSelectedValue,
-                                allSelectedValue,
-                                noneSelectedValue) {
+                                  allSelectedValue,
+                                  noneSelectedValue) {
   return selectOneOf(
     function() { return someSelectedValue; },
     function() { return allSelectedValue; },
@@ -53,8 +53,8 @@ const selectOneOfValue = function(someSelectedValue,
 };
 
 const selectOneOfProperty = function(someSelectedKey,
-                                   allSelectedKey,
-                                   noneSelectedKey) {
+                                     allSelectedKey,
+                                     noneSelectedKey) {
   return selectOneOf(
     function() { return this.get(someSelectedKey); },
     function() { return this.get(allSelectedKey); },
@@ -106,7 +106,9 @@ const SelectPickerMixin = Ember.Mixin.create({
       // selection is either an object or an array of object depending on the
       // value of the multiple property. Ember.Select maintains the value
       // property.
-      var selection     = this.selectionAsArray();
+      var selection = this.selectionAsArray().map(function(item) {
+        return Ember.get(item, valuePath);
+      });
       var searchMatcher = this.makeSearchMatcher();
 
       var result = _compact(Ember.makeArray(this.get('content'))
@@ -120,7 +122,7 @@ const SelectPickerMixin = Ember.Mixin.create({
               group:    group,
               label:    label,
               value:    value,
-              selected: _contains(selection, item)
+              selected: _contains(selection, value)
             });
           } else {
             return null;
@@ -257,28 +259,38 @@ const SelectPickerMixin = Ember.Mixin.create({
     this.set('selection', selection);
   },
 
+  selectAnItem: function(selected) {
+    if (!this.get('disabled')) {
+      if (this.get('multiple')) {
+        this.set('keepDropdownOpen', true);
+        this.toggleSelection(selected.get('item'));
+      } else {
+        this.setProperties({
+          // TODO: value will be removed in the future
+          value: selected.get('value'),
+          selection: selected.get('item')
+        });
+      }
+    }
+  },
+
+  sendChangeAction: function() {
+    const changeAction = Ember.get(this, 'attrs.action');
+    if (changeAction) {
+      changeAction(this.get('selection'));
+    }
+  },
+
   actions: {
     selectItem(selected) {
-      if (!this.get('disabled')) {
-        if (this.get('multiple')) {
-          this.set('keepDropdownOpen', true);
-          this.toggleSelection(selected.get('item'));
-        } else {
-          this.setProperties({
-            value: selected.get('value'),
-            selection: selected.get('item')
-          });
-        }
-      }
+      this.selectAnItem(selected);
+      this.sendChangeAction();
       return false;
     },
 
     selectAllNone(listName) {
-      var _this = this;
-      this.get(listName)
-        .forEach(function (item) {
-          _this.send('selectItem', item);
-        });
+      this.get(listName).forEach(Ember.run.bind(this, this.selectAnItem));
+      this.sendChangeAction();
       return false;
     },
 
@@ -287,7 +299,6 @@ const SelectPickerMixin = Ember.Mixin.create({
       const contentList = this.get('contentList');
       const selectedValues = Ember.makeArray(this.$('select').val());
       if (this.get('multiple')) {
-        console.dir(selectedValues);
         this.set('selection', contentList.filter(function(item) {
           return selectedValues.indexOf(item.get('value')) !== -1;
         }));
@@ -296,6 +307,7 @@ const SelectPickerMixin = Ember.Mixin.create({
       } else {
         this.send('selectItem', _findBy(contentList, 'value', selectedValues[0]));
       }
+      this.sendChangeAction();
     },
 
     toggleSelectAllNone() {
