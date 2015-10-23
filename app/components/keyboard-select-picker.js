@@ -60,12 +60,30 @@ var KeyboardSelectPickerComponent = SelectPicker.extend(
   ),
 
   keyboardShortcuts: {
-    'enter': 'selectActiveItem',
-    'up': 'activePrev',
-    'down': 'activeNext',
-    'shift+tab': 'activePrev',
-    'tab': 'activeNext',
-    'esc': 'closeDropdown'
+    'enter': {
+      action: 'selectActiveItem',
+      scoped: true,
+    },
+    'up': {
+      action: 'activePrev',
+      scoped: true,
+    },
+    'down': {
+      action: 'activeNext',
+      scoped: true,
+    },
+    'shift+tab': {
+      action: 'activePrev',
+      scoped: true,
+    },
+    'tab': {
+      action: 'activeNext',
+      scoped: true,
+    },
+    'esc': {
+      action: 'closeDropdown',
+      scoped: true,
+    },
   },
 
   actions: {
