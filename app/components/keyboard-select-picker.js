@@ -81,7 +81,7 @@ var KeyboardSelectPickerComponent = SelectPicker.extend(
       scoped: true,
     },
     'esc': {
-      action: 'closeDropdown'
+      action: 'closeDropdown',
       scoped: true,
     },
   },
