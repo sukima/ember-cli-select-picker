@@ -64,7 +64,7 @@
       {{#if group.name}}<li class="dropdown-header" role="presentation" tabindex="-1">{{group.name}}</li>{{/if}}
       {{#each group.items as |item|}}
         <li role="presentation" tabindex="-1" class="{{if disabled 'disabled'}} {{if item.active 'active'}} {{if item.selected 'selected'}}">
-          <a role="menuitem" tabindex="{{if item.active '0' '-1'}}" {{action "selectItem" item}}>
+          <a role="menuitem" data-itemid={{item.itemId}} tabindex="{{if item.active '0' '-1'}}" {{action "selectItem" item}}>
             {{item.label}}
             <span class="glyphicon glyphicon-ok check-mark {{if item.selected '' 'hidden'}}"></span>
           </a>
