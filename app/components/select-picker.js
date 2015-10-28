@@ -49,10 +49,15 @@ export default Ember.Component.extend(
   }),
 
   actions: {
-    showHide: function () {
+    showHide() {
       this.toggleProperty('showDropdown');
     },
-    closeDropdown: function() {
+
+    openDropdown() {
+      this.set('showDropdown', true);
+    },
+
+    closeDropdown() {
       this.set('showDropdown', false);
     }
   }
