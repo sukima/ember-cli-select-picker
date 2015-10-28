@@ -69,7 +69,7 @@ const isAdvancedSearch = function(liveSearch) {
   );
 };
 
-const SelectPickerMixin = Ember.Mixin.create({
+export default Ember.Mixin.create({
   liveSearch:   false,
   showDropdown: false,
   promptMessage: 'Please select an option',
@@ -330,5 +330,3 @@ const SelectPickerMixin = Ember.Mixin.create({
     }
   }
 });
-
-export default SelectPickerMixin;
