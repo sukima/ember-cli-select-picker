@@ -283,18 +283,21 @@ const SelectPickerMixin = Ember.Mixin.create({
 
   actions: {
     selectItem(selected) {
+      if (this.get('disabled')) { return true; }
       this.selectAnItem(selected);
       this.sendChangeAction();
       return false;
     },
 
     selectAllNone(listName) {
+      if (this.get('disabled')) { return true; }
       this.get(listName).forEach(Ember.run.bind(this, this.selectAnItem));
       this.sendChangeAction();
       return false;
     },
 
     selectByValue() {
+      if (this.get('disabled')) { return true; }
       const hasPrompt = Ember.isPresent(this.get('prompt'));
       const contentList = this.get('contentList');
       const selectedValues = Ember.makeArray(this.$('select').val());
