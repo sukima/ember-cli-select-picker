@@ -8,9 +8,8 @@
 <div class="bs-select dropdown {{if nativeMobile 'hidden-xs'}} {{if disabled 'disabled'}} {{if showDropdown 'open'}}">
   <button type="button"
           {{action "showHide"}}
-          class="btn dropdown-toggle {{buttonClass}}"
+          class="btn dropdown-toggle {{buttonClass}} {{if disabled 'disabled'}}"
           id={{menuButtonId}}
-          disabled={{disabled}}
           aria-expanded="true">
     <span class="pull-left">
       {{selectionSummary}}
@@ -23,18 +22,18 @@
     </li>
     {{#if liveSearch}}
       <li>
-        {{input type="text" class="search-filter form-control" value=searchFilter focus="preventClosing"}}
+        {{input type="text" disabled=disabled class="search-filter form-control" value=searchFilter focus="preventClosing"}}
       </li>
     {{/if}}
     {{#if multiple}}
       <li>
         {{#if splitAllNoneButtons}}
           <div class="btn-group select-all-none btn-block" role="group" aria-label="Select all or none">
-            <button type="button" class="btn btn-default btn-xs" {{action "selectAllNone" "unselectedContentList"}}>{{selectAllLabel}}</button>
-            <button type="button" class="btn btn-default btn-xs" {{action "selectAllNone" "selectedContentList"}}>{{selectNoneLabel}}</button>
+            <button type="button" disabled={{disabled}} class="btn btn-default btn-xs" {{action "selectAllNone" "unselectedContentList"}}>{{selectAllLabel}}</button>
+            <button type="button" disabled={{disabled}} class="btn btn-default btn-xs" {{action "selectAllNone" "selectedContentList"}}>{{selectNoneLabel}}</button>
           </div>
         {{else}}
-          <button type="button" class="btn btn-default btn-xs btn-block" {{action "toggleSelectAllNone"}}>
+          <button type="button" disabled={{disabled}} class="btn btn-default btn-xs btn-block" {{action "toggleSelectAllNone"}}>
             {{selectAllNoneLabel}}
             <span class="check-mark glyphicon {{glyphiconClass}}"></span>
           </button>
@@ -45,7 +44,7 @@
       {{#unless group.items.firstObject.first}}<li class="divider" role="presentation"></li>{{/unless}}
       {{#if group.name}}<li class="dropdown-header" role="presentation">{{group.name}}</li>{{/if}}
       {{#each group.items as |item|}}
-        <li role="presentation" class="{{if item.active 'active'}} {{if item.selected 'selected'}}">
+        <li role="presentation" class="{{if disabled 'disabled'}} {{if item.active 'active'}} {{if item.selected 'selected'}}">
           <a role="menuitem" tabindex="-1" {{action "selectItem" item}}>
             {{item.label}}
             <span class="glyphicon glyphicon-ok check-mark {{if item.selected '' 'hidden'}}"></span>
