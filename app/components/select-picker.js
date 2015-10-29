@@ -3,7 +3,7 @@ import SelectPickerMixin from 'ember-cli-select-picker/mixins/select-picker';
 
 var I18nProps = (Ember.I18n && Ember.I18n.TranslateableProperties) || {};
 
-var SelectPickerComponent = Ember.Component.extend(
+export default Ember.Component.extend(
   SelectPickerMixin, I18nProps, {
 
   nothingSelectedMessage: 'Nothing Selected',
@@ -49,13 +49,16 @@ var SelectPickerComponent = Ember.Component.extend(
   }),
 
   actions: {
-    showHide: function () {
+    showHide() {
       this.toggleProperty('showDropdown');
     },
-    closeDropdown: function() {
+
+    openDropdown() {
+      this.set('showDropdown', true);
+    },
+
+    closeDropdown() {
       this.set('showDropdown', false);
     }
   }
 });
-
-export default SelectPickerComponent;

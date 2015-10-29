@@ -69,7 +69,7 @@ const isAdvancedSearch = function(liveSearch) {
   );
 };
 
-const SelectPickerMixin = Ember.Mixin.create({
+export default Ember.Mixin.create({
   liveSearch:   false,
   showDropdown: false,
   promptMessage: 'Please select an option',
@@ -112,13 +112,14 @@ const SelectPickerMixin = Ember.Mixin.create({
       var searchMatcher = this.makeSearchMatcher();
 
       var result = _compact(Ember.makeArray(this.get('content'))
-        .map(function(item) {
+        .map(function(item, index) {
           const label = Ember.get(item, labelPath);
           const value = Ember.get(item, valuePath);
           const group = groupPath ? Ember.get(item, groupPath) : null;
           if (searchMatcher(group) || searchMatcher(label)) {
             return Ember.Object.create({
               item:     item,
+              itemId:   index,
               group:    group,
               label:    label,
               value:    value,
@@ -330,5 +331,3 @@ const SelectPickerMixin = Ember.Mixin.create({
     }
   }
 });
-
-export default SelectPickerMixin;
