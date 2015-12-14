@@ -21,8 +21,8 @@ export default Ember.Component.extend(
   selectionBadge: Ember.computed(
     'selection.length', 'badgeEnabled',
     function() {
-      var enabled = this.get('badgeEnabled');
-      var selected = this.get('selection.length');
+      const enabled = this.get('badgeEnabled');
+      const selected = this.get('selection.length');
       return (enabled && selected && selected !== 0) ? selected : '';
     }
   ),
