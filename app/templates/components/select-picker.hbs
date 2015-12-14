@@ -5,7 +5,7 @@
   </div>
 {{/if}}
 
-<div class="bs-select dropdown {{if nativeMobile 'hidden-xs'}} {{if disabled 'disabled'}} {{if showDropdown 'open'}}"
+<div class="bs-select dropdown {{if isDropUp 'dropup'}} {{if nativeMobile 'hidden-xs'}} {{if disabled 'disabled'}} {{if showDropdown 'open'}}"
      tabindex="0">
   <button type="button"
           {{action "showHide"}}
