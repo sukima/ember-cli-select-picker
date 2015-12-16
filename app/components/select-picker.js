@@ -21,17 +21,19 @@ export default Ember.Component.extend(
   selectionBadge: Ember.computed(
     'selection.length', 'badgeEnabled',
     function() {
-      var enabled = this.get('badgeEnabled');
-      var selected = this.get('selection.length');
+      const enabled = this.get('badgeEnabled');
+      const selected = this.get('selection.length');
       return (enabled && selected && selected !== 0) ? selected : '';
     }
   ),
 
   setupDom: Ember.on('didInsertElement', function() {
-    $(document).on(
-      `click.${this.get('elementId')}`,
-      Ember.run.bind(this, this.hideDropdownMenu)
-    );
+    const id = this.get('elementId');
+    this.updateDropUp();
+    $(document)
+      .on(`click.${id}`,  Ember.run.bind(this, this.hideDropdownMenu))
+      .on(`scroll.${id}`, Ember.run.bind(this, this.updateDropUp))
+      .on(`resize.${id}`, Ember.run.bind(this, this.updateDropUp));
   }),
 
   hideDropdownMenu: function(evt) {
@@ -42,6 +44,17 @@ export default Ember.Component.extend(
     if (this.element && !$.contains(this.element, evt.target)) {
       this.send('closeDropdown');
     }
+  },
+
+  updateDropUp() {
+    const windowHeight   = $(window).height();
+    const scrollTop      = $(window).scrollTop();
+    const buttonOffset   = this.$().offset().top;
+    const buttonHeight   = this.$().height();
+    const menuHeight     = this.$('.dropdown-menu').height();
+    const viewportOffset = buttonOffset - scrollTop;
+    const menuBottom     = viewportOffset + buttonHeight + menuHeight;
+    this.set('isDropUp', menuBottom > windowHeight);
   },
 
   teardownDom: Ember.on('willDestroyElement', function() {
