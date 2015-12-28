@@ -1,6 +1,6 @@
 # Ember-cli-select-picker [![npm version](http://img.shields.io/npm/v/ember-cli-select-picker.svg)](https://npmjs.org/package/ember-cli-select-picker) [![build status](http://img.shields.io/travis/sukima/ember-cli-select-picker.svg)](https://travis-ci.org/sukima/ember-cli-select-picker)
 
-<img align="right" src="https://sukima.github.io/ember-cli-select-picker/dist/screen-shot.png" />
+<img align="right" src="https://sukima.github.io/ember-cli-select-picker/screen-shot.png" />
 
 This is a reinvention of the select view. It is designed to offer a [Bootstrap][1] style and function. It is highly inspired from the jQuery plugin [bootstrap-select][2] but designed for Ember-CLI apps specifically. It supports single and multiple select. It adds select all/none, and search filtering for multiple selections.
 

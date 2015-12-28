@@ -1,0 +1,73 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">I18n Support</h3>
+  </div>
+  <div class="panel-body">
+    <p>To use i18n support you first need to install the <a href="https://www.npmjs.com/package/ember-i18n"><code>ember-i18n</code> addon</a> to your applicaiton project.</p>
+    <pre>$ ember install ember-i18n</pre>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Template Example</h3>
+  </div>
+  <div class="panel-body">
+{{#highlight-code lang="handlebars"}}
+\{{select-picker content=multipleContent
+                selection=multipleValue
+                multiple=true
+
+                titleTranslation="tranlation.key.title"
+                selectAllTranslation="tranlation.key.select_all"
+                selectNoneTranslation="tranlation.key.select_none"
+                nothingSelectedMessageTranslation="tranlation.key.prompt"
+
+                summaryMessageKey="i18n.tranlation.key.summary"
+
+                optionLabelPath="content.label"
+                optionValuePath="content.value"}}
+{{/highlight-code}}
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">JSON Strings Example</h3>
+  </div>
+  <div class="panel-body">
+{{#highlight-code lang="json"}}
+{
+  "translation": {
+    "key: {
+      "title": "translated title used for accessibility",
+      "prompt": "translated prompt",
+      "select_all": "Select All",
+      "select_none": "Select None",
+      "summary": {
+        "one": "You selected \{{item}}",
+        "other": "You selected \{{count}} items: \{{list}}"
+      }
+    }
+  }
+}
+{{/highlight-code}}
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Caveats</h3>
+  </div>
+  <div class="panel-body">
+    <p>Because translated properties can not have interpolated values the <code>summaryMessage</code> uses <code>summaryMessageKey</code> instead of <code>summaryMessageTranslation</code>. It has the following values:</p>
+    <dl>
+      <dt>count</dt>
+      <dd>Number of selected items. If <em>zero</em> then <code>nothingSelectedMessage</code> is used instead.</dd>
+      <dt>item</dt>
+      <dd>The item selected (first item in the list if multiple items are selected).</dd>
+      <dt>list</dt>
+      <dd>The list of selected items comma separated.</dd>
+    </dl>
+  </div>
+</div>

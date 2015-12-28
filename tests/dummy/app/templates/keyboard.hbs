@@ -1,0 +1,101 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Keyboard Support</h3>
+  </div>
+  <div class="panel-body">
+    <p>To use keyboard support you first need to install the <a href="https://www.npmjs.com/package/ember-keyboard-shortcuts"><code>ember-keyboard-shortcuts</code> addon</a> to your applicaiton project.</p>
+    <pre>$ ember install ember-keyboard-shortcuts</pre>
+  </div>
+  <table class="table table-condensed">
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><kbd>Esc</kbd></td>
+        <td>Close the dropdown list</td>
+      </tr>
+      <tr>
+        <td><kbd>Enter</kbd></td>
+        <td>Open the dropdown list <em>or</em> Select/Unselect item the cursor is on</td>
+      </tr>
+      <tr>
+        <td><kbd>Down</kbd></td>
+        <td>Move cursor to <strong>next</strong> item</td>
+      </tr>
+      <tr>
+        <td><kbd>Up</kbd></td>
+        <td>Move cursor to <strong>previous</strong> item</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Single Selection</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <p><strong>Results:</strong> {{singleChoiceStr}}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4">
+        {{keyboard-select-picker content=singleContent
+                                 selection=singleChoice
+                                 action=(action "setSingleChoice")
+                                 optionLabelPath="content.label"
+                                 optionValuePath="content.value"}}
+      </div>
+      <div class="col-sm-8">
+{{#highlight-code lang="handlebars"}}
+\{{keyboard-select-picker content=singleContent
+                         selection=singleChoice
+                         action=(action "setSingleChoice")
+                         optionLabelPath="content.label"
+                         optionValuePath="content.value"}}
+{{/highlight-code}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Multiple Selections</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <p><strong>Results:</strong> {{multipleChoicesStr}}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4">
+        {{keyboard-select-picker content=multipleContent
+                                 selection=multipleChoices
+                                 action=(action "setMultipleChoices")
+                                 multiple=true
+                                 optionGroupPath="group"
+                                 optionLabelPath="content.label"
+                                 optionValuePath="content.value"}}
+      </div>
+      <div class="col-sm-8">
+{{#highlight-code lang="handlebars"}}
+\{{keyboard-select-picker content=multipleContent
+                         selection=multipleChoices
+                         action=(action "setMultipleChoices")
+                         multiple=true
+                         optionGroupPath="group"
+                         optionLabelPath="content.label"
+                         optionValuePath="content.value"}}
+{{/highlight-code}}
+      </div>
+    </div>
+  </div>
+</div>
