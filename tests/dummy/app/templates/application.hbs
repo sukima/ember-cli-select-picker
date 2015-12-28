@@ -1,3 +1,44 @@
-<h2 id="title">Welcome to Ember</h2>
+<div class="container-fluid">
+  <div class="jumbotron">
+    <h1>Select Picker</h1>
+    <p>An Ember based reinvention of the select picker for Bootstrap 3.</p>
+    <p><small>Version: {{addonVersion}}</small></p>
 
-{{outlet}}
+    <ul class="nav nav-pills">
+      {{#link-to "index" tagName="li"}}
+        {{#link-to "index" class="btn btn-lg"}}Intro{{/link-to}}
+      {{/link-to}}
+      {{#link-to "install" tagName="li"}}
+        {{#link-to "install" class="btn btn-lg"}}Installing{{/link-to}}
+      {{/link-to}}
+      {{#link-to "searching" tagName="li"}}
+        {{#link-to "searching" class="btn btn-lg"}}Searching{{/link-to}}
+      {{/link-to}}
+      {{#link-to "options" tagName="li"}}
+        {{#link-to "options" class="btn btn-lg"}}Options{{/link-to}}
+      {{/link-to}}
+      {{#link-to "i18n" tagName="li"}}
+        {{#link-to "i18n" class="btn btn-lg"}}Internationalization{{/link-to}}
+      {{/link-to}}
+      {{#link-to "keyboard" tagName="li"}}
+        {{#link-to "keyboard" class="btn btn-lg"}}Keyboard Support{{/link-to}}
+      {{/link-to}}
+    </ul>
+
+  </div>
+
+  {{outlet}}
+
+</div>
+
+{{!--
+    live search
+      simple search
+      advanced search
+    options
+      all or none
+      class changes primary, info, success, warning, danger, inverse
+      prompt
+    I18n support
+    Keyboard support
+--}}
