@@ -224,13 +224,9 @@ export default Ember.Mixin.create({
           item: item,
           list: selection.join(', ')
         });
-        // If the item we're inserting into our selection message was a
-        // SafeString then then translation needs to be marked as well in order
-        // for any html in the original not to get escaped.
-        if (item && item.toHTML) {
-          translation = Ember.String.htmlSafe(translation);
-        }
-        return translation;
+        // I18n is returning a string that's been escaped, we don't want the
+        // string to get escaped again.
+        return Ember.String.htmlSafe(translation);
       }
       switch (count) {
         case 0:
