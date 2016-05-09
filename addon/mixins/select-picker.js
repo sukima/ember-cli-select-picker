@@ -208,11 +208,13 @@ export default Ember.Mixin.create({
   selectionLabels: Ember.computed.mapBy('selectedContentList', 'label'),
 
   selectionSummary: Ember.computed(
-    'selectionLabels.[]', 'nothingSelectedMessage', 'summaryMessage', 'summaryMessageKey',
+    'selectionLabels.[]', 'nothingSelectedMessage', 'multipleSelectedMessage',
+    'summaryMessage', 'summaryMessageKey',
     function() {
-      var selection = this.get('selectionLabels');
-      var count = selection.get('length');
+      var selection  = this.get('selectionLabels');
+      var count      = selection.get('length');
       var messageKey = this.get('summaryMessageKey');
+      var message    = this.get('summaryMessage');
       if (Ember.I18n && Ember.isPresent(messageKey)) {
         // TODO: Allow an enablePrompt="false" feature
         if (count === 0) {
@@ -227,19 +229,22 @@ export default Ember.Mixin.create({
         // I18n is returning a string that's been escaped, we don't want the
         // string to get escaped again.
         return Ember.String.htmlSafe(translation);
-      }
-      switch (count) {
-        case 0:
-          return this.get('nothingSelectedMessage');
-        case 1:
-          return selection.get('firstObject');
-        default:
-          return Ember.String.fmt(
-            this.get('summaryMessage'),
-            count,
-            selection.get('firstObject'),
-            selection.join(', ')
-          );
+      } else if (Ember.isPresent(message)) {
+        return message;
+      } else {
+        switch (count) {
+          case 0:
+            return this.get('nothingSelectedMessage');
+          case 1:
+            return selection.get('firstObject');
+          default:
+            return Ember.String.fmt(
+              this.get('multipleSelectedMessage'),
+              count,
+              selection.get('firstObject'),
+              selection.join(', ')
+            );
+        }
       }
     }
   ),
