@@ -31,9 +31,10 @@ export default Ember.Component.extend(
     const id = this.get('elementId');
     this.updateDropUp();
     $(document)
-      .on(`click.${id}`,  Ember.run.bind(this, this.hideDropdownMenu))
-      .on(`scroll.${id}`, Ember.run.bind(this, this.updateDropUp))
-      .on(`resize.${id}`, Ember.run.bind(this, this.updateDropUp));
+      .on(`click.${id}`,      Ember.run.bind(this, this.hideDropdownMenu))
+      .on(`touchstart.${id}`, Ember.run.bind(this, this.hideDropdownMenu))
+      .on(`scroll.${id}`,     Ember.run.bind(this, this.updateDropUp))
+      .on(`resize.${id}`,     Ember.run.bind(this, this.updateDropUp));
   }),
 
   hideDropdownMenu: function(evt) {
