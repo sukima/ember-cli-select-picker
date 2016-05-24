@@ -3,15 +3,6 @@
 
 /* jshint ignore:end */
 
-define('dummy/acceptance-tests/main', ['exports', 'ember-cli-sri/acceptance-tests/main'], function (exports, main) {
-
-	'use strict';
-
-
-
-	exports['default'] = main['default'];
-
-});
 define('dummy/app', ['exports', 'ember', 'ember/resolver', 'ember/load-initializers', 'dummy/config/environment'], function (exports, Ember, Resolver, loadInitializers, config) {
 
   'use strict';
@@ -149,7 +140,7 @@ define('dummy/components/select-picker', ['exports', 'ember', 'ember-cli-select-
   exports['default'] = Ember['default'].Component.extend(SelectPickerMixin['default'], I18nProps, {
 
     nothingSelectedMessage: 'Nothing Selected',
-    summaryMessage: '%@ items selected',
+    multipleSelectedMessage: '%@ items selected',
     selectAllLabel: 'All',
     selectNoneLabel: 'None',
 
@@ -169,7 +160,7 @@ define('dummy/components/select-picker', ['exports', 'ember', 'ember-cli-select-
     setupDom: Ember['default'].on('didInsertElement', function () {
       var id = this.get('elementId');
       this.updateDropUp();
-      $(document).on('click.' + id, Ember['default'].run.bind(this, this.hideDropdownMenu)).on('scroll.' + id, Ember['default'].run.bind(this, this.updateDropUp)).on('resize.' + id, Ember['default'].run.bind(this, this.updateDropUp));
+      $(document).on('click.' + id, Ember['default'].run.bind(this, this.hideDropdownMenu)).on('touchstart.' + id, Ember['default'].run.bind(this, this.hideDropdownMenu)).on('scroll.' + id, Ember['default'].run.bind(this, this.updateDropUp)).on('resize.' + id, Ember['default'].run.bind(this, this.updateDropUp));
     }),
 
     hideDropdownMenu: function hideDropdownMenu(evt) {
@@ -415,7 +406,8 @@ define('dummy/initializers/export-application-global', ['exports', 'ember', 'dum
 
   exports.initialize = initialize;
 
-  function initialize(container, application) {
+  function initialize() {
+    var application = arguments[1] || arguments[0];
     if (config['default'].exportApplicationGlobal !== false) {
       var value = config['default'].exportApplicationGlobal;
       var globalName;
@@ -438,8 +430,6 @@ define('dummy/initializers/export-application-global', ['exports', 'ember', 'dum
       }
     }
   }
-
-  ;
 
   exports['default'] = {
     name: 'export-application-global',
@@ -5432,7 +5422,7 @@ catch(err) {
 if (runningTests) {
   require("dummy/tests/test-helper");
 } else {
-  require("dummy/app")["default"].create({"addonVersion":"2.3.2","name":"ember-cli-select-picker","version":"2.3.2+9b1b71e9"});
+  require("dummy/app")["default"].create({"addonVersion":"2.3.5","name":"ember-cli-select-picker","version":"v2.3.5"});
 }
 
 /* jshint ignore:end */
