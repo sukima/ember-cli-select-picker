@@ -29,7 +29,7 @@ export default Ember.Component.extend(
 
   setupDom: Ember.on('didInsertElement', function() {
     const id = this.get('elementId');
-    this.updateDropUp();
+    Ember.run.scheduleOnce('afterRender', this, this.updateDropUp);
     $(document)
       .on(`click.${id}`,      Ember.run.bind(this, this.hideDropdownMenu))
       .on(`touchstart.${id}`, Ember.run.bind(this, this.hideDropdownMenu))
