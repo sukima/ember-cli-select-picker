@@ -18,7 +18,7 @@ const emberArrayFunc = function(method) {
     }
   };
 };
-const _contains = emberArrayFunc('contains');
+const _includes = emberArrayFunc('includes');
 const _mapBy    = emberArrayFunc('mapBy');
 const _filterBy = emberArrayFunc('filterBy');
 const _findBy   = emberArrayFunc('findBy');
@@ -123,7 +123,7 @@ export default Ember.Mixin.create({
               group:    group,
               label:    label,
               value:    value,
-              selected: _contains(selection, value)
+              selected: _includes(selection, value)
             });
           } else {
             return null;
