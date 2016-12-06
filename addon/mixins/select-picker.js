@@ -5,12 +5,12 @@ import Ember from 'ember';
 // to native arrays.
 const emberArrayFunc = function(method) {
   return function(ctx, ...args) {
-    const props = Ember.Enumerable.mixins[0].properties;
+    let enumeral = Ember.A(ctx);
     Ember.assert(
       `Ember.Enumerable has no method ${method}`,
-      Ember.typeOf(props[method]) === 'function'
+      Ember.typeOf(enumeral[method]) === 'function'
     );
-    const result = props[method].apply(Ember.A(ctx), args);
+    let result = enumeral[method](...args);
     if (Ember.typeOf(result) === 'array') {
       return Ember.A(result);
     } else {
@@ -18,7 +18,12 @@ const emberArrayFunc = function(method) {
     }
   };
 };
-const _contains = emberArrayFunc('contains');
+const _contains = emberArrayFunc(
+  // Backwards compatability for Ember < 2.x
+  Ember.Enumerable.keys().indexOf('includes') !== -1 ?
+    'includes' :
+    'contains'
+);
 const _mapBy    = emberArrayFunc('mapBy');
 const _filterBy = emberArrayFunc('filterBy');
 const _findBy   = emberArrayFunc('findBy');
