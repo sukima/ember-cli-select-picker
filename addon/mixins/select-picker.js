@@ -112,14 +112,14 @@ export default Ember.Mixin.create({
       // value of the multiple property. Ember.Select maintains the value
       // property.
       var selection = this.selectionAsArray().map(function(item) {
-        return Ember.get(item, valuePath);
+        return valuePath ? Ember.get(item, valuePath) : item;
       });
       var searchMatcher = this.makeSearchMatcher();
 
       var result = _compact(Ember.makeArray(this.get('content'))
         .map(function(item, index) {
-          const label = Ember.get(item, labelPath);
-          const value = Ember.get(item, valuePath);
+          const label = labelPath ? Ember.get(item, labelPath) : item;
+          const value = valuePath ? Ember.get(item, valuePath) : item;
           const group = groupPath ? Ember.get(item, groupPath) : null;
           if (searchMatcher(group) || searchMatcher(label)) {
             return Ember.Object.create({
