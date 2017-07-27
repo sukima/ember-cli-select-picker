@@ -1,61 +1,75 @@
-{{view "select"
-       class="native-select form-control"
-       classNameBindings="nativeMobile:visible-xs-inline:hidden"
-       content=content
-       selection=selection
-       value=value
-       title=title
-       prompt=prompt
-       multiple=multiple
-       disabled=disabled
-       optionGroupPath=optionGroupPath
-       optionLabelPath=optionLabelPath
-       optionValuePath=optionValuePath}}
+{{#if nativeMobile}}
+  <div class="visible-xs-inline">
+    {{yield}}
+    {{partial "components/native-select"}}
+  </div>
+{{/if}}
 
-<div {{bind-attr class=":bs-select :dropdown nativeMobile:hidden-xs disabled:disabled showDropdown:open"}}>
+<div class="bs-select dropdown {{if isDropUp 'dropup'}} {{if nativeMobile 'hidden-xs'}} {{if disabled 'disabled'}} {{if showDropdown 'open'}}"
+     tabindex="0">
   <button type="button"
-          {{bind-attr class=":btn :dropdown-toggle buttonClass"}}
-          {{bind-attr id=menuButtonId}}
-          {{bind-attr disabled=disabled}}
           {{action "showHide"}}
+          class="btn dropdown-toggle {{buttonClass}} {{if disabled 'disabled'}}"
+          id={{menuButtonId}}
+          tabindex="-1"
           aria-expanded="true">
-    <span class="pull-left">
+    <span class="pull-left" tabindex="-1">
       {{selectionSummary}}
-      <span {{bind-attr class="selectionBadge:badge:caret"}}>{{selectionBadge}}</span>
+      <span class={{if selectionBadge 'badge' 'caret'}} tabindex="-1">{{selectionBadge}}</span>
     </span>
   </button>
-  <ul class="dropdown-menu" role="menu" {{bind-attr aria-labelledby=menuButtonId}}>
+  <ul class="dropdown-menu" role="menu" aria-labelledby={{menuButtonId}} tabindex="-1">
+    <li tabindex="-1">
+      {{yield}}
+    </li>
     {{#if liveSearch}}
-      <li>
-        {{input type="text" class="search-filter form-control" value=searchFilter action="preventClosing" on="focus"}}
+      <li tabindex="-1">
+        {{input type="text"
+                tabindex="-1"
+                disabled=disabled
+                class="search-filter form-control"
+                value=searchFilter
+                focus="preventClosing"}}
       </li>
     {{/if}}
     {{#if multiple}}
-      <li>
+      <li tabindex="-1">
         {{#if splitAllNoneButtons}}
-          <div class="btn-group select-all-none btn-block" role="group" aria-label="Select all or none">
-            <button type="button" class="btn btn-default btn-xs" {{action "selectAllNone" "unselectedContentList"}}>{{selectAllLabel}}</button>
-            <button type="button" class="btn btn-default btn-xs" {{action "selectAllNone" "selectedContentList"}}>{{selectNoneLabel}}</button>
+          <div class="btn-group select-all-none btn-block" role="group" aria-label="Select all or none" tabindex="-1">
+            <button type="button"
+                    disabled={{disabled}}
+                    class="btn btn-default btn-xs"
+                    {{action "selectAllNone" "unselectedContentList"}}
+                    tabindex="-1">
+              {{selectAllLabel}}
+            </button>
+            <button type="button"
+                    disabled={{disabled}}
+                    class="btn btn-default btn-xs"
+                    {{action "selectAllNone" "selectedContentList"}}
+                    tabindex="-1">
+              {{selectNoneLabel}}
+            </button>
           </div>
         {{else}}
-          <button type="button" class="btn btn-default btn-xs btn-block" {{action "toggleSelectAllNone"}}>
+          <button type="button" class="btn btn-default btn-xs btn-block" {{action "toggleSelectAllNone"}} tabindex="-1">
             {{selectAllNoneLabel}}
-            <span {{bind-attr class=":check-mark :glyphicon glyphiconClass"}}></span>
+            <span class="check-mark glyphicon {{glyphiconClass}}" tabindex="-1"></span>
           </button>
         {{/if}}
       </li>
     {{/if}}
-    {{#each groupedContentList as |item|}}
-      {{#if item.group}}
-        {{#unless item.first}}<li class="divider" role="presentation"></li>{{/unless}}
-        <li class="dropdown-header" role="presentation">{{item.group}}</li>
-      {{/if}}
-      <li role="presentation" {{bind-attr class="item.active:active item.selected:selected"}}>
-        <a role="menuitem" tabindex="-1" {{action "selectItem" item}}>
-          {{item.label}}
-          <span {{bind-attr class=":glyphicon :glyphicon-ok :check-mark item.selected::hidden"}}></span>
-        </a>
-      </li>
+    {{#each nestedGroupContentList as |group|}}
+      {{#unless group.items.firstObject.first}}<li class="divider" role="presentation" tabindex="-1"></li>{{/unless}}
+      {{#if group.name}}<li class="dropdown-header" role="presentation" tabindex="-1">{{group.name}}</li>{{/if}}
+      {{#each group.items as |item|}}
+        <li role="presentation" tabindex="-1" class="{{if disabled 'disabled'}} {{if item.active 'active'}} {{if item.selected 'selected'}}">
+          <a role="menuitem" data-itemid={{item.itemId}} tabindex="{{if item.active '0' '-1'}}" {{action "selectItem" item}}>
+            {{item.label}}
+            <span class="glyphicon glyphicon-ok check-mark {{if item.selected '' 'hidden'}}"></span>
+          </a>
+        </li>
+      {{/each}}
     {{/each}}
   </ul>
 </div>

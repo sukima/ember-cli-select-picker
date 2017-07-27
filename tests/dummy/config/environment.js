@@ -1,4 +1,5 @@
 /* jshint node: true */
+var pkg = require('../../../package.json');
 
 module.exports = function(environment) {
   var ENV = {
@@ -16,6 +17,7 @@ module.exports = function(environment) {
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
+      addonVersion: pkg.version
     }
   };
 
@@ -40,7 +42,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-
+    ENV.baseURL = '/ember-cli-select-picker';
   }
 
   return ENV;

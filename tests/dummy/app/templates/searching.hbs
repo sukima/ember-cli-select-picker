@@ -1,0 +1,114 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Single Search</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <p class="search-examples">Simple search attempts to match terms as full strings.</p>
+        <p>For example the term <code>def</code> would match the words <code>abc<u>def</u></code>, <code><u>def</u>ghi</code>, or <code>in<u>def</u>initely</code>.</p>
+        <p><strong>Result:</strong> {{simpleSearchChoicesStr}}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4">
+        {{select-picker content=simpleSearchContent
+                        selection=simpleSearchChoices
+                        action=(action "setSimpleSearchChoices")
+                        multiple=true
+                        liveSearch=true
+                        optionGroupPath="group"
+                        optionLabelPath="content.label"
+                        optionValuePath="content.value"}}
+      </div>
+      <div class="col-sm-8">
+{{#highlight-code lang="handlebars"}}
+\{{select-picker content=simpleSearchContent
+                selection=simpleSearchChoices
+                action=(action "setSimpleSearchChoices")
+                multiple=true
+                liveSearch=true
+                optionGroupPath="group"
+                optionLabelPath="content.label"
+                optionValuePath="content.value"}}
+{{/highlight-code}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Advanced Search</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <p class="search-examples">Advanced search finds terms through a fuzzy match. It looks for characters in the string that appear in order from left to right with any number of other character in between.</p>
+        <p>For example the search term <code>def</code> would match <code>abc<u>def</u></code> or <code><u>d</u>iv<u>e</u>rsi<u>f</u>y</code>.</p>
+        <p><strong>Result:</strong> {{advancedSearchChoicesStr}}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4">
+        {{select-picker content=advancedSearchContent
+                        selection=advancedSearchChoices
+                        action=(action "setAdvancedSearchChoices")
+                        multiple=true
+                        liveSearch="advanced"
+                        optionGroupPath="group"
+                        optionLabelPath="content.label"
+                        optionValuePath="content.value"}}
+      </div>
+      <div class="col-sm-8">
+{{#highlight-code lang="handlebars"}}
+\{{select-picker content=advancedSearchContent
+                selection=advancedSearchChoices
+                action=(action "setAdvancedSearchChoices")
+                multiple=true
+                liveSearch="advanced"
+                optionGroupPath="group"
+                optionLabelPath="content.label"
+                optionValuePath="content.value"}}
+{{/highlight-code}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">List Picker</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <p><strong>Result:</strong> {{listSearchChoicesStr}}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4">
+        {{list-picker content=listSearchContent
+                      selection=listSearchChoices
+                      action=(action "setListSearchChoices")
+                      multiple=true
+                      liveSearch="advanced"
+                      optionGroupPath="group"
+                      optionLabelPath="content.label"
+                      optionValuePath="content.value"}}
+      </div>
+      <div class="col-sm-8">
+{{#highlight-code lang="handlebars"}}
+\{{list-picker content=advancedSearchContent
+              selection=listSearchChoices
+              action=(action "setListSearchChoices")
+              multiple=true
+              liveSearch="advanced"
+              optionGroupPath="group"
+              optionLabelPath="content.label"
+              optionValuePath="content.value"}}
+{{/highlight-code}}
+      </div>
+    </div>
+  </div>
+</div>

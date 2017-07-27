@@ -12,7 +12,8 @@ module.exports = {
       resolutions: {
         'ember': 'release'
       }
-    },
+    }
+    /* TODO: Skipping, Current code does not work on beta/canary builds yet.
     {
       name: 'ember-beta',
       dependencies: {
@@ -31,5 +32,6 @@ module.exports = {
         'ember': 'canary'
       }
     }
+    */
   ]
 };

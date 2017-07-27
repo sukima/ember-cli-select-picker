@@ -3,6 +3,7 @@
 <div id="single-picker">
   {{select-picker content=theContent
                   value=singleValue
+                  nativeMobile=false
                   optionLabelPath="content.name"
                   optionValuePath="content.id"}}
 </div>
@@ -12,6 +13,7 @@
                   selection=multipleValue
                   multiple=true
                   showBadge=true
+                  nativeMobile=false
                   optionLabelPath="content.name"
                   optionValuePath="content.id"}}
 </div>
@@ -21,6 +23,7 @@
                   multiple=true
                   selection=multipleValue
                   liveSearch=true
+                  nativeMobile=false
                   optionLabelPath="content.name"
                   optionValuePath="content.id"}}
 </div>
@@ -30,6 +33,7 @@
                   multiple=true
                   selection=multipleValue
                   liveSearch="advanced"
+                  nativeMobile=false
                   optionLabelPath="content.name"
                   optionValuePath="content.id"}}
 </div>

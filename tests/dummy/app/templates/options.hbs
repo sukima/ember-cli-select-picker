@@ -1,0 +1,120 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Badges</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <p><strong>Results:</strong> {{multipleChoicesStr}}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4">
+        <p>{{select-picker content=multipleContent
+                           selection=multipleChoices
+                           action=(action "setMultipleChoices")
+                           multiple=true
+                           showBadge=true
+                           summaryMessage="Multiple items selected"
+                           optionLabelPath="content.label"
+                           optionValuePath="content.value"}}</p>
+      </div>
+      <div class="col-sm-8">
+{{#highlight-code lang="handlebars"}}
+\{{select-picker content=multipleContent
+                selection=multipleChoices
+                action=(action "setMultipleChoices")
+                multiple=true
+                showBadge=true
+                summaryMessage="Multiple items selected"
+                optionLabelPath="content.label"
+                optionValuePath="content.value"}}
+{{/highlight-code}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Mobile Support</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <p>By default the native select widget is used for small screens (mobile) If you want the Bootstrap styled picker on mobile devices then you need to set <code>nativeMobile</code> to <em>false</em>.</p>
+        <p><strong>Results:</strong> {{multipleChoicesStr}}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4">
+        <p>{{select-picker content=multipleContent
+                           selection=multipleChoices
+                           action=(action "setMultipleChoices")
+                           multiple=true
+                           nativeMobile=false
+                           optionLabelPath="content.label"
+                           optionValuePath="content.value"}}</p>
+      </div>
+      <div class="col-sm-8">
+{{#highlight-code lang="handlebars"}}
+\{{select-picker content=multipleContent
+                selection=multipleChoices
+                action=(action "setMultipleChoices")
+                multiple=true
+                nativeMobile=false
+                optionLabelPath="content.label"
+                optionValuePath="content.value"}}
+{{/highlight-code}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Custom content</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <p>You can add your own custom content to the top of the drop down by using Ember's block syntax.</p>
+        <p><strong>Results:</strong> {{multipleChoicesStr}}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4">
+        <p>{{#select-picker content=multipleContent
+                            selection=multipleChoices
+                            action=(action "setMultipleChoices")
+                            multiple=true
+                            summaryMessage="Example content inside"
+                            optionLabelPath="content.label"
+                            optionValuePath="content.value"}}
+          <div class="alert alert-info clearfix">
+            Hello! Try this: <button class="btn btn-sm btn-primary" {{action "showHelloDialog"}}>button</button>
+          </div>
+        {{/select-picker}}</p>
+      </div>
+      <div class="col-sm-8">
+{{#highlight-code lang="handlebars"}}
+\{{#select-picker content=multipleContent
+                 selection=multipleChoices
+                 action=(action "setMultipleChoices")
+                 multiple=true
+                 summaryMessage="Example content inside"
+                 optionLabelPath="content.label"
+                 optionValuePath="content.value"}}
+  &lt;div class="alert alert-info"&gt;
+    Hello! Try this &lt;button \{{action "showHelloDialog"}}&gt;button&lt;/button&gt;
+  &lt;/div&gt;
+\{{/select-picker}}
+{{/highlight-code}}
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#modal-dialog title="Hello User" isVisible=showHelloDialog onDismiss=(action "hideHelloDialog")}}
+  <p>Hello random user!</p>
+{{/modal-dialog}}

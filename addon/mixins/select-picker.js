@@ -1,8 +1,38 @@
 import Ember from 'ember';
 
-var selectOneOf = function(someSelected,
-                           allSelected,
-                           noneSelected) {
+// Ember Addons need to be coded as if Ember.EXTEND_PROTOTYPES = false
+// Because of this we need to make our own proxy functions to apply as one offs
+// to native arrays.
+const emberArrayFunc = function(method) {
+  return function(ctx, ...args) {
+    let enumeral = Ember.A(ctx);
+    Ember.assert(
+      `Ember.Enumerable has no method ${method}`,
+      Ember.typeOf(enumeral[method]) === 'function'
+    );
+    let result = enumeral[method](...args);
+    if (Ember.typeOf(result) === 'array') {
+      return Ember.A(result);
+    } else {
+      return result;
+    }
+  };
+};
+const _contains = emberArrayFunc(
+  // Backwards compatability for Ember < 2.x
+  Ember.Enumerable.keys().indexOf('includes') !== -1 ?
+    'includes' :
+    'contains'
+);
+const _mapBy    = emberArrayFunc('mapBy');
+const _filterBy = emberArrayFunc('filterBy');
+const _findBy   = emberArrayFunc('findBy');
+const _uniq     = emberArrayFunc('uniq');
+const _compact  = emberArrayFunc('compact');
+
+const selectOneOf = function(someSelected,
+                             allSelected,
+                             noneSelected) {
   return Ember.computed(
     'hasSelectedItems', 'allItemsSelected',
     function() {
@@ -17,9 +47,9 @@ var selectOneOf = function(someSelected,
   );
 };
 
-var selectOneOfValue = function(someSelectedValue,
-                                allSelectedValue,
-                                noneSelectedValue) {
+const selectOneOfValue = function(someSelectedValue,
+                                  allSelectedValue,
+                                  noneSelectedValue) {
   return selectOneOf(
     function() { return someSelectedValue; },
     function() { return allSelectedValue; },
@@ -27,9 +57,9 @@ var selectOneOfValue = function(someSelectedValue,
   );
 };
 
-var selectOneOfProperty = function(someSelectedKey,
-                                   allSelectedKey,
-                                   noneSelectedKey) {
+const selectOneOfProperty = function(someSelectedKey,
+                                     allSelectedKey,
+                                     noneSelectedKey) {
   return selectOneOf(
     function() { return this.get(someSelectedKey); },
     function() { return this.get(allSelectedKey); },
@@ -37,16 +67,25 @@ var selectOneOfProperty = function(someSelectedKey,
   );
 };
 
-var isAdvancedSearch = function(liveSearch) {
+const isAdvancedSearch = function(liveSearch) {
   return (
     Ember.typeOf(liveSearch) === 'string' &&
     liveSearch.toLowerCase() === 'advanced'
   );
 };
 
-var SelectPickerMixin = Ember.Mixin.create({
+export default Ember.Mixin.create({
   liveSearch:   false,
   showDropdown: false,
+  promptMessage: 'Please select an option',
+  prompt: Ember.computed.bool('promptMessage'),
+
+  showNativePrompt: Ember.computed(
+    'multiple', 'prompt',
+    function() {
+      return !this.get('multiple') && Ember.isPresent(this.get('prompt'));
+    }
+  ),
 
   menuButtonId: Ember.computed(
     'elementId',
@@ -56,20 +95,11 @@ var SelectPickerMixin = Ember.Mixin.create({
   ),
 
   selectionAsArray: function() {
-    var selection = this.get('selection');
-    // Ember.Select can set the value of selection to
-    // any of null, [], [Object, ...], or Object
-    if (Ember.isNone(selection)) {
-      return  Ember.A();
-    }
-    if (Ember.isArray(selection)) {
-      return Ember.A(selection);
-    }
-    return Ember.A([selection]);
+    return Ember.makeArray(this.get('selection'));
   },
 
   contentList: Ember.computed(
-    'selection.@each', 'content.@each', 'optionGroupPath',
+    'selection.[]', 'content.[]', 'optionGroupPath',
     'optionLabelPath', 'optionValuePath', 'searchFilter',
     function() {
       // Ember.Select does not include the content prefix for optionGroupPath
@@ -81,59 +111,53 @@ var SelectPickerMixin = Ember.Mixin.create({
       // selection is either an object or an array of object depending on the
       // value of the multiple property. Ember.Select maintains the value
       // property.
-      var selection     = this.selectionAsArray();
+      var selection = this.selectionAsArray().map(function(item) {
+        return valuePath ? Ember.get(item, valuePath) : item;
+      });
       var searchMatcher = this.makeSearchMatcher();
 
-      var result = Ember.A(this.get('content'))
-        .map(function(item) {
-          var label = Ember.get(item, labelPath);
-          var value = Ember.get(item, valuePath);
-          var group = groupPath ? Ember.get(item, groupPath) : null;
+      var result = _compact(Ember.makeArray(this.get('content'))
+        .map(function(item, index) {
+          const label = labelPath ? Ember.get(item, labelPath) : item;
+          const value = valuePath ? Ember.get(item, valuePath) : item;
+          const group = groupPath ? Ember.get(item, groupPath) : null;
           if (searchMatcher(group) || searchMatcher(label)) {
             return Ember.Object.create({
               item:     item,
+              itemId:   index,
               group:    group,
               label:    label,
               value:    value,
-              selected: selection.contains(item)
+              selected: _contains(selection, value)
             });
           } else {
             return null;
           }
-        });
+        }));
 
-      // Ember Addons need to be coded as if Ember.EXTEND_PROTOTYPES = false
-      // Because of this we need to manually extend our native array from the
-      // above map() function. Even though compact() is an Ember function it
-      // too sufferes from the same fate.
-      result = Ember.A(Ember.A(result).compact());
-
-      if (!Ember.isEmpty(result)) {
-        result.get('firstObject').set('first', true);
+      if (Ember.isPresent(result)) {
+        result.set('firstObject.first', true);
       }
 
       return result;
     }
   ),
 
-  groupedContentListWithoutActive: Ember.computed(
-    'contentList.@each.group',
+  nestedGroupContentList: Ember.computed(
+    'contentList.[].group',
     function() {
-      var lastGroup;
-      var result = Ember.A(this.get('contentList'));
-      result.forEach(function(item) {
-        let group = item.get('group');
-        if (group === lastGroup) {
-          item.set('group', null);
-        } else {
-          lastGroup = group;
-        }
+      const contentList = this.get('contentList');
+      const groups = _uniq(_mapBy(contentList, 'group'));
+      const results = Ember.A();
+      groups.forEach(function(group) {
+        results.pushObject(Ember.Object.create({
+          name: group,
+          items: _filterBy(contentList, 'group', group)
+        }));
       });
-      return result;
+      return results;
     }
   ),
-
-  groupedContentList: Ember.computed.alias('groupedContentListWithoutActive'),
 
   contentPathName: function(pathName) {
     return this.getWithDefault(pathName, '').substr(8);
@@ -189,11 +213,13 @@ var SelectPickerMixin = Ember.Mixin.create({
   selectionLabels: Ember.computed.mapBy('selectedContentList', 'label'),
 
   selectionSummary: Ember.computed(
-    'selectionLabels.[]', 'nothingSelectedMessage', 'summaryMessage', 'summaryMessageKey',
+    'selectionLabels.[]', 'nothingSelectedMessage', 'multipleSelectedMessage',
+    'summaryMessage', 'summaryMessageKey',
     function() {
-      var selection = this.get('selectionLabels');
-      var count = selection.get('length');
+      var selection  = this.get('selectionLabels');
+      var count      = selection.get('length');
       var messageKey = this.get('summaryMessageKey');
+      var message    = this.get('summaryMessage');
       if (Ember.I18n && Ember.isPresent(messageKey)) {
         // TODO: Allow an enablePrompt="false" feature
         if (count === 0) {
@@ -205,26 +231,25 @@ var SelectPickerMixin = Ember.Mixin.create({
           item: item,
           list: selection.join(', ')
         });
-        // If the item we're inserting into our selection message was a
-        // SafeString then then translation needs to be marked as well in order
-        // for any html in the original not to get escaped.
-        if (item && item.toHTML) {
-          translation = Ember.String.htmlSafe(translation);
+        // I18n is returning a string that's been escaped, we don't want the
+        // string to get escaped again.
+        return Ember.String.htmlSafe(translation);
+      } else if (Ember.isPresent(message)) {
+        return message;
+      } else {
+        switch (count) {
+          case 0:
+            return this.get('nothingSelectedMessage');
+          case 1:
+            return selection.get('firstObject');
+          default:
+            return Ember.String.fmt(
+              this.get('multipleSelectedMessage'),
+              count,
+              selection.get('firstObject'),
+              selection.join(', ')
+            );
         }
-        return translation;
-      }
-      switch (count) {
-        case 0:
-          return this.get('nothingSelectedMessage');
-        case 1:
-          return selection.get('firstObject');
-        default:
-          return Ember.String.fmt(
-            this.get('summaryMessage'),
-            count,
-            selection.get('firstObject'),
-            selection.join(', ')
-          );
       }
     }
   ),
@@ -232,40 +257,70 @@ var SelectPickerMixin = Ember.Mixin.create({
   clearSearchDisabled: Ember.computed.empty('searchFilter'),
 
   toggleSelection: function(value) {
-    var selection = this.get('selection');
-    if (selection.contains(value)) {
+    var selection = Ember.A(this.get('selection'));
+    if (_contains(selection, value)) {
       selection.removeObject(value);
     } else {
       selection.pushObject(value);
     }
+    this.set('selection', selection);
+  },
+
+  selectAnItem: function(selected) {
+    if (!this.get('disabled')) {
+      if (this.get('multiple')) {
+        this.set('keepDropdownOpen', true);
+        this.toggleSelection(selected.get('item'));
+      } else {
+        this.setProperties({
+          // TODO: value will be removed in the future
+          value: selected.get('value'),
+          selection: selected.get('item')
+        });
+      }
+    }
+  },
+
+  sendChangeAction: function() {
+    const changeAction = Ember.get(this, 'attrs.action');
+    if (changeAction) {
+      changeAction(this.get('selection'));
+    }
   },
 
   actions: {
-    selectItem: function(selected) {
-      if (!this.get('disabled')) {
-        if (this.get('multiple')) {
-          this.set('keepDropdownOpen', true);
-          this.toggleSelection(selected.get('item'));
-        } else {
-          this.setProperties({
-            value: selected.get('value'),
-            selection: selected.get('item')
-          });
-        }
+    selectItem(selected) {
+      if (this.get('disabled')) { return true; }
+      this.selectAnItem(selected);
+      this.sendChangeAction();
+      return false;
+    },
+
+    selectAllNone(listName) {
+      if (this.get('disabled')) { return true; }
+      this.get(listName).forEach(Ember.run.bind(this, this.selectAnItem));
+      this.sendChangeAction();
+      return false;
+    },
+
+    selectByValue() {
+      if (this.get('disabled')) { return true; }
+      const hasPrompt = Ember.isPresent(this.get('prompt'));
+      const contentList = this.get('contentList');
+      const selectedValues = Ember.makeArray(this.$('select').val());
+      if (this.get('multiple')) {
+        this.set('selection', contentList.filter(function(item) {
+          return selectedValues.indexOf(item.get('value')) !== -1;
+        }));
+      } else if (hasPrompt && Ember.isEmpty(selectedValues[0])) {
+        this.setProperties({value: null, selection: null});
+      } else {
+        this.send('selectItem', _findBy(contentList, 'value', selectedValues[0]));
       }
-      return false;
+      this.sendChangeAction();
     },
 
-    selectAllNone: function (listName) {
-      var _this = this;
-      this.get(listName)
-        .forEach(function (item) {
-          _this.send('selectItem', item);
-        });
-      return false;
-    },
-
-    toggleSelectAllNone: function () {
+    toggleSelectAllNone() {
       var listName;
       if (this.get('hasSelectedItems')) {
         listName = 'selectedContentList';
@@ -276,11 +331,9 @@ var SelectPickerMixin = Ember.Mixin.create({
       return false;
     },
 
-    clearFilter: function() {
+    clearFilter() {
       this.set('searchFilter', null);
       return false;
     }
   }
 });
-
-export default SelectPickerMixin;

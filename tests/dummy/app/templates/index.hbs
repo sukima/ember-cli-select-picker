@@ -1,0 +1,101 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Single Selection</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <p><strong>Results:</strong> {{singleChoiceStr}}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4">
+        <p>{{select-picker content=singleContent
+                           selection=singleChoice
+                           action=(action "setSingleChoice")
+                           optionLabelPath="content.label"
+                           optionValuePath="content.value"}}</p>
+      </div>
+      <div class="col-sm-8">
+{{#highlight-code lang="handlebars"}}
+\{{select-picker content=singleContent
+                selection=singleChoice
+                action=(action "setSingleChoice")
+                optionLabelPath="content.label"
+                optionValuePath="content.value"}}
+{{/highlight-code}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Multiple Selections</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <p><strong>Results:</strong> {{multipleChoicesStr}}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4">
+        <p>{{select-picker content=multipleContent
+                           selection=multipleChoices
+                           action=(action "setMultipleChoices")
+                           multiple=true
+                           optionGroupPath="group"
+                           optionLabelPath="content.label"
+                           optionValuePath="content.value"}}</p>
+      </div>
+      <div class="col-sm-8">
+{{#highlight-code lang="handlebars"}}
+\{{select-picker content=multipleContent
+                selection=multipleChoices
+                action=(action "setMultipleChoices")
+                multiple=true
+                optionGroupPath="group"
+                optionLabelPath="content.label"
+                optionValuePath="content.value"}}
+{{/highlight-code}}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">List Picker</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <p><strong>Results:</strong> {{listChoicesStr}}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4">
+        <p>{{list-picker content=listContent
+                         selection=listChoices
+                         action=(action "setListChoices")
+                         multiple="true"
+                         optionGroupPath="group"
+                         optionLabelPath="content.label"
+                         optionValuePath="content.value"}}</p>
+      </div>
+      <div class="col-sm-8">
+{{#highlight-code lang="handlebars"}}
+\{{list-picker content=listContent
+              selection=listChoices
+              action=(action "setListChoices")
+              multiple="true"
+              optionGroupPath="group"
+              optionLabelPath="content.label"
+              optionValuePath="content.value"}}
+{{/highlight-code}}
+      </div>
+    </div>
+  </div>
+</div>

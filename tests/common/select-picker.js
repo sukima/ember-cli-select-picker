@@ -9,7 +9,32 @@ const contentArray = [
 ];
 
 export default function() {
-  test('updates contentList when selection changes (single)', function(assert) {
+  test('sends action when there are updates to the selection', function(assert) {
+    assert.expect(1);
+
+    var results;
+    var component = this.subject({
+      content: contentArray,
+      selection: Ember.A(),
+      multiple: true,
+      optionValuePath: 'content.id',
+      optionLabelPath: 'content.name',
+      attrs: {
+        action: function(values) { results = values; }
+      }
+    });
+
+    Ember.run(function() {
+      component.send('selectItem', component.get('contentList.firstObject'));
+    });
+
+    assert.ok(
+      Ember.isPresent(results),
+      'action should be triggered on change'
+    );
+  });
+
+  test('updates selection when selectItem is triggered (single)', function(assert) {
     assert.expect(2);
 
     var component = this.subject({
@@ -20,21 +45,21 @@ export default function() {
     });
 
     assert.ok(
-      Ember.isNone(component.get('value')),
+      Ember.isEmpty(component.get('selection')),
       'no items should be selected'
     );
-
+    
     Ember.run(function() {
       component.send('selectItem', component.get('contentList.firstObject'));
     });
 
     assert.ok(
-      Ember.isPresent(component.get('value')),
+      Ember.isPresent(component.get('selection')),
       'one item should be selected'
     );
   });
 
-  test('updates contentList when selection changes (multiple)', function(assert) {
+  test('updates selection when selectItem is triggered (multiple)', function(assert) {
     assert.expect(3);
 
     var component = this.subject({
