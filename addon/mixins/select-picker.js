@@ -20,7 +20,7 @@ const emberArrayFunc = function(method) {
 };
 const _contains = emberArrayFunc(
   // Backwards compatability for Ember < 2.x and > 3.x
-  (typeOf ((Ember.A()).includes)) === 'function' ?
+  (typeof ((Ember.A()).includes)) === 'function' ?
     'includes' :
     'contains'
 );
