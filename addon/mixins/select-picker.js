@@ -19,8 +19,8 @@ const emberArrayFunc = function(method) {
   };
 };
 const _contains = emberArrayFunc(
-  // Backwards compatability for Ember < 2.x
-  Ember.Enumerable.keys().indexOf('includes') !== -1 ?
+  // Backwards compatability for Ember < 2.x and > 3.x
+  (typeof ((Ember.A()).includes)) === 'function' ?
     'includes' :
     'contains'
 );
